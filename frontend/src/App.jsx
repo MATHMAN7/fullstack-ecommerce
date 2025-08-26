@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import Register from "./pages/Register";
+import "./App.css"
+import Login from "./pages/Login";
+
 
 function App() {
   const [backendMessage, setBackendMessage] = useState("");
@@ -12,9 +16,9 @@ function App() {
   }, []);
 
   return (
-      <div>
-        <h1>Frontend + Backend Test</h1>
-        <p>{backendMessage}</p>
+      <div className="container">
+
+          <Login />
       </div>
   );
 }

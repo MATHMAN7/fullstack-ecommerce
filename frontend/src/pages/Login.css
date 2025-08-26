@@ -1,0 +1,96 @@
+.sup2{
+
+height: 100vh;
+margin: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+    background: linear-gradient(135deg, #3df314, #80ef55);
+font-family: Arial, sans-serif
+;}
+
+
+.container3{
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 300px;
+    height: 400px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #ffffff;;
+}
+
+.container3 button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(90deg, #ff00cc, #3333ff, #00f0ff);
+    background-size: 200% auto;
+    transition: background-position 0.4s;
+}
+
+.container2 button:hover {
+    background-color: cornflowerblue;
+}
+
+
+.container3 p {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+
+.container3 input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #eee;
+    padding: 12px 10px;
+    margin-bottom: 25px;
+    font-size: 15px;
+    font-family: 'PT Serif', serif;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+
+.container3 input:focus {
+    border-bottom: 2px solid #6a11cb;
+}
+
+
+.container3 input::placeholder {
+    color: #6c6b6b;
+    font-weight: 400;
+}
+
+.Lo{
+    text-align: center;
+
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    font-size: 30px;
+
+
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+
+
+
+    font-weight: 700;
+    color: #031e4c;
+
+    font-family: 'Poppins', sans-serif;
+
+}
