@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Register from "./pages/Register";
 import "./App.css"
 import Login from "./pages/Login";
+import RegisterPage from "./pages/Register";
 
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
   return (
       <div className="container">
 
-          <Login />
+          <RegisterPage/>
       </div>
   );
 }

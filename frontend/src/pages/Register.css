@@ -1,132 +1,100 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap');
 
-
-html, body, #root {
-    height: 100%;
+* {
     margin: 0;
     padding: 0;
-}
-
-/* Scoped page container */
-.sup {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'PT Serif', serif;
-
-    background: linear-gradient(135deg, #85c776, #f3f3f3);
-
-
-    background-attachment: fixed;
-}
-
-
-
-.sup{
-    height: 100vh;
-    width: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'PT Serif', serif;
-
-
-
-    background: linear-gradient(135deg, #85c776, #f3f3f3);
-
-
-    background-size: cover;
-    background-attachment: fixed;
-}
-
-.reg{
-    text-align: center;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    font-size: 40px;
-
-
-
-    letter-spacing: 1px;
-    text-transform: uppercase;
-
-
-
-
-    font-weight: 700;
-    color: #031e4c;
-
+    box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-
-
-
 }
 
-
-
-.container2{
-    padding: 50px;
+body {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    width: 300px;
-    height: 400px;
-    border: 1px solid black;
-    border-radius: 10px;
-    background-color: #ffffff;;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
 }
 
-
-.container2 button {
+.register-container {
     width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    background: linear-gradient(90deg, #ff00cc, #3333ff, #00f0ff);
-    background-size: 200% auto;
-    transition: background-position 0.4s;
+    max-width: 400px;
 }
 
-.container2 button:hover {
-    background-color: cornflowerblue;
-}
-
-
-.container2 p {
-    margin-top: 15px;
+.register-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     text-align: center;
-    font-weight: bold;
+}
+
+.register-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
     color: #333;
 }
 
+.register-card .subtitle {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 1.5rem;
+}
 
-.container2 input {
+.input-group {
+    text-align: left;
+    margin-bottom: 1.2rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    color: #555;
+}
+
+.input-group input {
     width: 100%;
-    border: none;
-    border-bottom: 2px solid #eee;
-    padding: 12px 10px;
-    margin-bottom: 25px;
-    font-size: 15px;
-    font-family: 'PT Serif', serif;
-    background: transparent;
+    padding: 0.7rem;
+    border-radius: 0.7rem;
+    border: 1px solid #ddd;
     outline: none;
-    transition: border-color 0.3s;
+    transition: 0.3s;
 }
 
-
-.container2 input:focus {
-    border-bottom: 2px solid #6a11cb;
+.input-group input:focus {
+    border-color: #2575fc;
+    box-shadow: 0 0 6px rgba(37,117,252,0.3);
 }
 
-
-.container2 input::placeholder {
-    color: #6c6b6b;
-    font-weight: 400;
+.register-btn {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 0.8rem;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
+.register-btn:hover {
+    transform: translateY(-2px);
+}
+
+.login-text {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.login-text a {
+    color: #2575fc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-text a:hover {
+    text-decoration: underline;
+}
