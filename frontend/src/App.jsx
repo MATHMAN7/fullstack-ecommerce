@@ -19,7 +19,7 @@ function App() {
   return (
       <div className="container">
 
-          <RegisterPage/>
+          <Login/>
       </div>
   );
 }

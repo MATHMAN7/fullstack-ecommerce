@@ -40,19 +40,22 @@ function Login() {
         <div className="container3">
             <form onSubmit={handleSubmit}>
                 <h2 className="Lo">Login</h2>
+                <p>Welcome Back</p>
                 <div className="email">
+                    <label htmlFor="email">Email</label>
                     <input
                         type="email"
-                        placeholder="Email"
+                        placeholder="Enter Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required/>
                 </div>
 
                 <div className="password">
+                    <label htmlFor="password">Password</label>
                     <input
                         type="password"
-                        placeholder="Password"
+                        placeholder="Enter Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
