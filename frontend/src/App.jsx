@@ -1,27 +1,53 @@
-import { useEffect, useState } from "react";
-import Register from "./pages/Register";
-import "./App.css"
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import RegisterPage from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
+
+
+const useAuth = () => {
+
+    const token = localStorage.getItem("authToken");
+    return !!token;
+};
 
 function App() {
-  const [backendMessage, setBackendMessage] = useState("");
+    const isAuthenticated = useAuth();
 
-  useEffect(() => {
+    return (
+        <Router>
+            <Routes>
 
-    fetch("http://localhost:5000/")
-        .then(res => res.json())
-        .then(data => setBackendMessage(data.message))
-        .catch(err => console.error(err));
-  }, []);
+                <Route
+                    path="/"
+                    element={
+                        isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+                    }
+                />
+                <Route
+                    path="/login"
+                    element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />}
+                />
+                <Route
+                    path="/register"
+                    element={isAuthenticated ? <Navigate to="/dashboard" /> : <RegisterPage />}
+                />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <Dashboard />
+                        </PrivateRoute>
+                    }
+                />
 
-  return (
-      <div className="container">
-
-          <Login/>
-      </div>
-  );
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
+
+

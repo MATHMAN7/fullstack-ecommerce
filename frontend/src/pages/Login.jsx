@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Login.css";
+import { Link } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ function Login() {
             const data = await res.json();
 
             if (res.ok) {
-                // Save token in localStorage
+
                 localStorage.setItem("token", data.token);
                 setMessage("Logged in successfully!");
             } else {
@@ -65,6 +66,10 @@ function Login() {
 
                 <button type="submit">Login</button>
                 {message && <p>{message}</p>}
+
+                <p>
+                    Don’t have an account? <Link to="/register">Register here</Link>
+                </p>
 
             </form>
         </div>

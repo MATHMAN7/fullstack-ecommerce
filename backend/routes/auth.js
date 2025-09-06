@@ -9,6 +9,10 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
 
+    console.log('Register route hit'); // <-- log
+    console.log('Request body:', req.body); // <-- log request body
+
+
     try {
 
         const userCheck = await pool.query(
@@ -59,6 +63,8 @@ router.post('/login', async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
+
+
 
         res.json({ message: 'Logged in', token });
     } catch (err) {

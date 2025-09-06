@@ -1,0 +1,55 @@
+.sup3 {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'PT Serif', serif;
+    background: linear-gradient(135deg, #85c776, #f3f3f3);
+    background-size: cover;
+}
+
+.container4 {
+    padding: 50px;
+    width: 350px;
+    height: 350px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.dash-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #031e4c;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.user-info p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.container4 button {
+    margin-top: 20px;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(90deg, #ff00cc, #3333ff, #00f0ff);
+    background-size: 200% auto;
+    transition: background-position 0.4s;
+}
+
+.container4 button:hover {
+    background-position: right center;
+}
