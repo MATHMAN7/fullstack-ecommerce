@@ -4,7 +4,7 @@ import RegisterPage from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import ProductDetail from "./pages/ProductDetail";
-
+import Products from "./pages/Products";
 
 const useAuth = () => {
 
@@ -38,6 +38,16 @@ function App() {
                     element={
                         <PrivateRoute>
                             <Dashboard />
+                        </PrivateRoute>
+                    }
+                />
+
+
+                <Route
+                    path="/products"
+                    element={
+                        <PrivateRoute>
+                            <Products />
                         </PrivateRoute>
                     }
                 />
