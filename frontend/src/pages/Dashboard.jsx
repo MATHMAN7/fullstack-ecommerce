@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
+import NavBar from "../components/NavBar";
 
 function Dashboard() {
     const [user, setUser] = useState(null);
@@ -43,6 +44,12 @@ function Dashboard() {
                     <p>{message}</p>
                 )}
             </div>
+
+            <div>
+                <NavBar />
+                <h1>Welcome to the Dashboard</h1>
+            </div>
+
         </div>
     );
 }
