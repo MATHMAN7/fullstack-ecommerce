@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
+import NavBar from "./components/NavBar";
 
 const useAuth = () => {
 
@@ -37,22 +38,26 @@ function App() {
                     path="/dashboard"
                     element={
                         <PrivateRoute>
-                            <Dashboard />
+                            <>
+                                <NavBar />
+                                <Dashboard />
+                            </>
                         </PrivateRoute>
                     }
                 />
-
 
                 <Route
-                    path="/products"
+                    path="/product/:id"
                     element={
                         <PrivateRoute>
-                            <Products />
+                            <>
+                                <NavBar />
+                                <ProductDetail />
+                            </>
                         </PrivateRoute>
                     }
                 />
 
-                <Route path="/product/:id" element={<ProductDetail />} />
 
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
