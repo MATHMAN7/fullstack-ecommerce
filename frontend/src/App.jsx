@@ -8,7 +8,6 @@ import Products from "./pages/Products";
 import NavBar from "./components/NavBar";
 
 const useAuth = () => {
-
     const token = localStorage.getItem("authToken");
     return !!token;
 };
@@ -19,7 +18,6 @@ function App() {
     return (
         <Router>
             <Routes>
-
                 <Route
                     path="/"
                     element={
@@ -45,7 +43,17 @@ function App() {
                         </PrivateRoute>
                     }
                 />
-
+                <Route
+                    path="/products"
+                    element={
+                        <PrivateRoute>
+                            <>
+                                <NavBar />
+                                <Products />
+                            </>
+                        </PrivateRoute>
+                    }
+                />
                 <Route
                     path="/product/:id"
                     element={
@@ -57,8 +65,6 @@ function App() {
                         </PrivateRoute>
                     }
                 />
-
-
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Router>
@@ -66,5 +72,6 @@ function App() {
 }
 
 export default App;
+
 
 
