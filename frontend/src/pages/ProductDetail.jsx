@@ -6,6 +6,21 @@ function ProductDetail() {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const handleAddToCart = () => {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existingItemIndex = cart.findIndex(item => item.id === product.id);
+
+        if (existingItemIndex >= 0) {
+            cart[existingItemIndex].quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert(`${product.name} added to cart!`);
+    };
+
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -40,6 +55,8 @@ function ProductDetail() {
             <h2>{product.name}</h2>
             <p>{product.description}</p>
             <p><strong>Price:</strong> ${product.price}</p>
+            <button onClick={handleAddToCart}>Add to Cart</button>
+
 
             <Link to="/products">← Back to Products</Link>
         </div>
