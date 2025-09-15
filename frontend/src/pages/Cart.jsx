@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -25,13 +26,17 @@ function Cart() {
                 <ul>
                     {cartItems.map(item => (
                         <li key={item.id}>
-                            {item.name} - ${item.price} x {item.quantity}
+                            {item.name} - ${item.price} × {item.quantity}
                             <button onClick={() => handleRemove(item.id)}>Remove</button>
                         </li>
                     ))}
                 </ul>
             )}
             <h3>Total: ${totalPrice}</h3>
+
+
+
+            <Link to="/products">← Back to Products</Link>
         </div>
     );
 }
