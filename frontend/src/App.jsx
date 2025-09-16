@@ -6,6 +6,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
 import NavBar from "./components/NavBar";
+import Cart from "./pages/Cart";
 
 const useAuth = () => {
     const token = localStorage.getItem("authToken");
@@ -65,6 +66,20 @@ function App() {
                         </PrivateRoute>
                     }
                 />
+
+                <Route
+                    path="/cart"
+                    element={
+                        <PrivateRoute>
+                            <>
+                                <NavBar />
+                                <Cart />
+                            </>
+                        </PrivateRoute>
+                    }
+                />
+
+
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Router>
