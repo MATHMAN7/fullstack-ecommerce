@@ -20,7 +20,6 @@ function ProductDetail() {
         alert(`${product.name} added to cart!`);
     };
 
-
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -55,8 +54,9 @@ function ProductDetail() {
             <h2>{product.name}</h2>
             <p>{product.description}</p>
             <p><strong>Price:</strong> ${product.price}</p>
-            <button onClick={handleAddToCart}>Add to Cart</button>
 
+            <button onClick={handleAddToCart}>Add to Cart</button>
+            <Link to="/cart">Go to Cart</Link>
 
             <Link to="/products">← Back to Products</Link>
         </div>
