@@ -21,6 +21,9 @@ function NavBar() {
                     <Link to="/cart">Cart</Link>
                 </li>
                 <li>
+                    <Link to="/orders">Orders</Link>
+                </li>
+                <li>
                     <button onClick={handleLogout}>Logout</button>
                 </li>
             </ul>
