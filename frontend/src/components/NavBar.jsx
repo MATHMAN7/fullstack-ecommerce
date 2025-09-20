@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import "./NavBar.css";
 
 function NavBar() {
     const navigate = useNavigate();
@@ -10,7 +11,7 @@ function NavBar() {
 
     return (
         <nav className="navbar">
-            <ul>
+            <ul className="navbar-list">
                 <li>
                     <Link to="/dashboard">Dashboard</Link>
                 </li>
@@ -32,3 +33,4 @@ function NavBar() {
 }
 
 export default NavBar;
+
