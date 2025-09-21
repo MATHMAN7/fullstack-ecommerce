@@ -8,6 +8,7 @@ import Products from "./pages/Products";
 import NavBar from "./components/NavBar";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
+import Footer from "./components/Footer";
 
 
 const useAuth = () => {
@@ -68,6 +69,20 @@ function App() {
                         </PrivateRoute>
                     }
                 />
+
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <>
+                                <NavBar />
+                                <Dashboard />
+                                <Footer />
+                            </>
+                        </PrivateRoute>
+                    }
+                />
+
 
                 <Route
                     path="/cart"
