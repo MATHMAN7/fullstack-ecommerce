@@ -10,7 +10,6 @@ import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
 
-
 const useAuth = () => {
     const token = localStorage.getItem("authToken");
     return !!token;
@@ -36,40 +35,8 @@ function App() {
                     path="/register"
                     element={isAuthenticated ? <Navigate to="/dashboard" /> : <RegisterPage />}
                 />
-                <Route
-                    path="/dashboard"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <Dashboard />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/products"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <Products />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/product/:id"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <ProductDetail />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
 
+                {/* Authenticated routes with NavBar + Footer */}
                 <Route
                     path="/dashboard"
                     element={
@@ -82,8 +49,30 @@ function App() {
                         </PrivateRoute>
                     }
                 />
-
-
+                <Route
+                    path="/products"
+                    element={
+                        <PrivateRoute>
+                            <>
+                                <NavBar />
+                                <Products />
+                                <Footer />
+                            </>
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/product/:id"
+                    element={
+                        <PrivateRoute>
+                            <>
+                                <NavBar />
+                                <ProductDetail />
+                                <Footer />
+                            </>
+                        </PrivateRoute>
+                    }
+                />
                 <Route
                     path="/cart"
                     element={
@@ -91,12 +80,11 @@ function App() {
                             <>
                                 <NavBar />
                                 <Cart />
+                                <Footer />
                             </>
                         </PrivateRoute>
                     }
                 />
-
-
                 <Route
                     path="/orders"
                     element={
@@ -104,11 +92,11 @@ function App() {
                             <>
                                 <NavBar />
                                 <Orders />
+                                <Footer />
                             </>
                         </PrivateRoute>
                     }
                 />
-
 
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
@@ -117,6 +105,4 @@ function App() {
 }
 
 export default App;
-
-
 
