@@ -24,3 +24,8 @@
 .navbar-list li a:hover {
     text-decoration: underline;
 }
+.active-link {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #007bff;
+}
