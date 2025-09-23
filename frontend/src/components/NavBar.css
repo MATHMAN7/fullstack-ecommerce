@@ -29,3 +29,20 @@
     text-decoration: underline;
     color: #007bff;
 }
+
+.navbar-list li a,
+.navbar-list li button {
+    color: white;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-list li button:hover,
+.navbar-list li a:hover {
+    text-decoration: underline;
+    color: #00aced;
+    transform: scale(1.05);
+}
