@@ -9,6 +9,7 @@ import NavBar from "./components/NavBar";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
+import Checkout from "./pages/Checkout";
 
 const useAuth = () => {
     const token = localStorage.getItem("authToken");
@@ -93,6 +94,18 @@ function App() {
                                 <NavBar />
                                 <Orders />
                                 <Footer />
+                            </>
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/checkout"
+                    element={
+                        <PrivateRoute>
+                            <>
+                                <NavBar />
+                                <Checkout />
                             </>
                         </PrivateRoute>
                     }
