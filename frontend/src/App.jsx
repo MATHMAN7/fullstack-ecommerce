@@ -106,6 +106,7 @@ function App() {
                             <>
                                 <NavBar />
                                 <Checkout />
+                                <Footer />
                             </>
                         </PrivateRoute>
                     }

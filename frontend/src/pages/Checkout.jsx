@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Checkout.css";
 
 function Checkout() {
+    const [status, setStatus] = useState(null);
+
     const handleConfirmOrder = () => {
-        alert("Order confirmed! (placeholder)");
+        setStatus("Processing payment...");
+
+
+        setTimeout(() => {
+            setStatus("✅ Payment successful! Your order has been placed.");
+        }, 1500);
     };
 
     return (
@@ -28,6 +35,8 @@ function Checkout() {
             <button className="confirm-btn" onClick={handleConfirmOrder}>
                 Confirm Order
             </button>
+
+            {status && <p className="payment-status">{status}</p>}
         </div>
     );
 }
