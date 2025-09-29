@@ -1,21 +1,88 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Checkout.css";
 
 function Checkout() {
-    const [status, setStatus] = useState(null);
+    const [cartItems, setCartItems] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(false);
 
-    const handleConfirmOrder = () => {
-        setStatus("Processing payment...");
+    useEffect(() => {
+        const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCartItems(savedCart);
 
+        const totalPrice = savedCart.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+        );
+        setTotal(totalPrice);
+    }, []);
 
-        setTimeout(() => {
-            setStatus("✅ Payment successful! Your order has been placed.");
-        }, 1500);
+    const handleConfirmOrder = async () => {
+        if (cartItems.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const token = localStorage.getItem("authToken"); // assuming you store JWT
+            const response = await fetch("http://localhost:5000/orders", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    items: cartItems.map((item) => ({
+                        product_id: item.id,
+                        quantity: item.quantity,
+                        price: item.price,
+                    })),
+                    total,
+                    status: "pending",
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to place order");
+            }
+
+            const data = await response.json();
+            alert(`Order confirmed! Order ID: ${data.orderId}`);
+
+            // Clear cart after successful order
+            localStorage.removeItem("cart");
+            setCartItems([]);
+            setTotal(0);
+        } catch (error) {
+            console.error(error);
+            alert("Something went wrong while placing your order.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="checkout-container">
             <h2>Checkout</h2>
+
+            <div className="checkout-section">
+                <h3>Order Summary</h3>
+                {cartItems.length === 0 ? (
+                    <p>Your cart is empty.</p>
+                ) : (
+                    <ul className="order-summary">
+                        {cartItems.map((item, index) => (
+                            <li key={index}>
+                                {item.name} x {item.quantity} — $
+                                {(item.price * item.quantity).toFixed(2)}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+                <h4>Total: ${total.toFixed(2)}</h4>
+            </div>
 
             <div className="checkout-section">
                 <h3>Shipping Address</h3>
@@ -32,11 +99,9 @@ function Checkout() {
                 <input type="text" placeholder="CVV" />
             </div>
 
-            <button className="confirm-btn" onClick={handleConfirmOrder}>
-                Confirm Order
+            <button className="confirm-btn" onClick={handleConfirmOrder} disabled={loading}>
+                {loading ? "Placing Order..." : "Confirm Order"}
             </button>
-
-            {status && <p className="payment-status">{status}</p>}
         </div>
     );
 }
