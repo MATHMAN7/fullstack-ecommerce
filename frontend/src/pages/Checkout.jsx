@@ -26,22 +26,14 @@ function Checkout() {
         setLoading(true);
 
         try {
-            const token = localStorage.getItem("authToken"); // assuming you store JWT
+            const token = localStorage.getItem("authToken"); // JWT
             const response = await fetch("http://localhost:5000/orders", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    items: cartItems.map((item) => ({
-                        product_id: item.id,
-                        quantity: item.quantity,
-                        price: item.price,
-                    })),
-                    total,
-                    status: "pending",
-                }),
+                body: JSON.stringify({ cartItems }),
             });
 
             if (!response.ok) {
@@ -51,7 +43,6 @@ function Checkout() {
             const data = await response.json();
             alert(`Order confirmed! Order ID: ${data.orderId}`);
 
-            // Clear cart after successful order
             localStorage.removeItem("cart");
             setCartItems([]);
             setTotal(0);
