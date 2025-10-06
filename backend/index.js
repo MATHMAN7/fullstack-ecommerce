@@ -6,6 +6,9 @@ import pool from './db.js';
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
 import ordersRoutes from './routes/orders.js';
+import adminRouter from "./routes/admin.js";
+
+
 
 dotenv.config({ path: './easy.env' });
 
@@ -17,6 +20,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', ordersRoutes);
+app.use("/admin", adminRouter);
 
 app.get('/', async (req, res) => {
     try {
