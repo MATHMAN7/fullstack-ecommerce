@@ -10,6 +10,8 @@ import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
+import AdminDashboard from "./pages/AdminDashboard";
+
 
 const useAuth = () => {
     const token = localStorage.getItem("authToken");
@@ -111,6 +113,11 @@ function App() {
                         </PrivateRoute>
                     }
                 />
+
+                <Route path="/admin"
+                       element={<PrivateRoute><AdminDashboard /></PrivateRoute>}
+                />
+
 
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
