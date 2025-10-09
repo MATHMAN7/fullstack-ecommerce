@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { Link } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,9 +19,9 @@ function Login() {
             const data = await res.json();
 
             if (res.ok) {
+                localStorage.setItem("authToken", data.token);
 
-                localStorage.setItem("token", data.token);
-                setMessage("Logged in successfully!");
+                navigate("/dashboard");
             } else {
                 setMessage(data.message);
             }
@@ -30,58 +31,32 @@ function Login() {
         }
     };
 
-
-
-
-
-
-
     return (
-       <div className="sup2">
-        <div className="container3">
+        <div className="login-container">
+            <h2>Login</h2>
+            {message && <p>{message}</p>}
             <form onSubmit={handleSubmit}>
-                <h2 className="Lo">Login</h2>
-                <p>Welcome Back</p>
-                <div className="email">
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required/>
-                </div>
-
-                <div className="password">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        placeholder="Enter Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-
-
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
                 <button type="submit">Login</button>
-                {message && <p>{message}</p>}
-
-                <p>
-                    Don’t have an account? <Link to="/register">Register here</Link>
-                </p>
-
             </form>
+            <p>
+                Don't have an account? <Link to="/register">Register</Link>
+            </p>
         </div>
-</div>
     );
-
-
-
-
-
-
 }
-
 
 export default Login;
