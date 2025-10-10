@@ -20,7 +20,6 @@ function Login() {
 
             if (res.ok) {
                 localStorage.setItem("authToken", data.token);
-
                 navigate("/dashboard");
             } else {
                 setMessage(data.message);
@@ -32,29 +31,31 @@ function Login() {
     };
 
     return (
-        <div className="login-container">
-            <h2>Login</h2>
-            {message && <p>{message}</p>}
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Login</button>
-            </form>
-            <p>
-                Don't have an account? <Link to="/register">Register</Link>
-            </p>
+        <div className="login-page"> {/* <-- Added wrapper */}
+            <div className="login-container">
+                <h2>Login</h2>
+                {message && <p className="message">{message}</p>}
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <button type="submit">Login</button>
+                </form>
+                <p>
+                    Don’t have an account? <Link to="/register">Register</Link>
+                </p>
+            </div>
         </div>
     );
 }

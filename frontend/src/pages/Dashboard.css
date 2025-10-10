@@ -1,32 +1,29 @@
-.sup3 {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'PT Serif', serif;
-    background: linear-gradient(135deg, #85c776, #f3f3f3);
-    background-size: cover;
+.dashboard {
+    min-height: 100vh;
+    min-width: 100vw;
+    background-color: #f5f7fb;
+    font-family: 'Poppins', sans-serif;
 }
 
-.container4 {
-    padding: 50px;
-    width: 350px;
-    height: 350px;
-    background-color: #ffffff;
-    border-radius: 10px;
+.dashboard-content {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid black;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+
+.welcome-card {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    flex: 0 0 350px;
 }
 
 .dash-title {
-    font-size: 36px;
-    font-weight: 700;
+    font-size: 28px;
     color: #031e4c;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
     text-align: center;
 }
 
@@ -35,7 +32,7 @@
     margin: 10px 0;
 }
 
-.container4 button {
+.welcome-card button {
     margin-top: 20px;
     padding: 12px;
     width: 100%;
@@ -45,11 +42,17 @@
     font-weight: 600;
     color: white;
     cursor: pointer;
-    background: linear-gradient(90deg, #ff00cc, #3333ff, #00f0ff);
+    background: linear-gradient(90deg, #ff00cc, #3333ff, #ff2600);
     background-size: 200% auto;
     transition: background-position 0.4s;
 }
 
-.container4 button:hover {
+.welcome-card button:hover {
     background-position: right center;
+}
+
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
 }
