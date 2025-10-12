@@ -31,7 +31,7 @@ function Dashboard() {
 
     return (
         <div className="dashboard">
-            <NavBar />
+
 
             <div className="dashboard-content">
                 <div className="welcome-card">
