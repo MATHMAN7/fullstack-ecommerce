@@ -1,0 +1,58 @@
+.recent-orders {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 2rem;
+}
+
+.recent-orders h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.recent-orders table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.recent-orders th,
+.recent-orders td {
+    text-align: left;
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+.recent-orders th {
+    background: #f5f7fa;
+    color: #555;
+    font-weight: 600;
+}
+
+.recent-orders tr:hover {
+    background-color: #f9fbff;
+}
+
+
+.status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status.delivered {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status.shipped {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.status.processing {
+    background: #fef3c7;
+    color: #92400e;
+}

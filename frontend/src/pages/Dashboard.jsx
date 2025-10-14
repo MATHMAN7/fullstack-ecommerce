@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
-import NavBar from "../components/NavBar";
+import StatsGrid from "../components/StatsGrid";
+import RecentOrders from "../components/RecentOrders";
+
 
 function Dashboard() {
     const [user, setUser] = useState(null);
@@ -34,6 +36,7 @@ function Dashboard() {
 
 
             <div className="dashboard-content">
+
                 <div className="welcome-card">
                     <h2 className="dash-title">Dashboard</h2>
                     {user ? (
@@ -47,11 +50,20 @@ function Dashboard() {
                     )}
                 </div>
 
-                <div className="main-content">
-                    <h1>Welcome to the Dashboard</h1>
 
+                <div className="main-content">
+                    <h1>Welcome to your Dashboard</h1>
+                    <p className="subtitle">Here’s a quick overview of your activity.</p>
+
+
+                    <StatsGrid />
+
+
+                    <RecentOrders />
                 </div>
             </div>
+
+
         </div>
     );
 }
