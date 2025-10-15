@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./Cart.css"
+import "./Cart.css";
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -18,7 +18,7 @@ function Cart() {
     };
 
     const handleRemove = (id) => {
-        const updatedCart = cartItems.filter(item => item.id !== id);
+        const updatedCart = cartItems.filter((item) => item.id !== id);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
         setCartItems(updatedCart);
         calculateTotal(updatedCart);
@@ -36,7 +36,7 @@ function Cart() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ cartItems }),
             });
@@ -58,24 +58,52 @@ function Cart() {
     };
 
     return (
-        <div className="cart-page">
-            <h2>Your Cart</h2>
-            {cartItems.length === 0 ? (
-                <p>Your cart is empty</p>
-            ) : (
-                <ul>
-                    {cartItems.map(item => (
-                        <li key={item.id}>
-                            {item.name} - ${item.price} x {item.quantity}
-                            <button onClick={() => handleRemove(item.id)}>Remove</button>
-                        </li>
-                    ))}
-                </ul>
-            )}
-            <h3>Total: ${totalPrice}</h3>
-            {cartItems.length > 0 && <button onClick={handleCheckout}>Place Order</button>}
-            {message && <p>{message}</p>}
-        </div>
+        <section className="cart-section">
+            <div className="cart-container">
+                <h2>Your Cart</h2>
+
+                {cartItems.length === 0 ? (
+                    <p className="empty-cart">Your cart is empty</p>
+                ) : (
+                    <>
+                        <div className="cart-list">
+                            {cartItems.map((item) => (
+                                <div key={item.id} className="cart-item">
+                                    {item.image && (
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="cart-item-image"
+                                        />
+                                    )}
+                                    <div className="cart-item-info">
+                                        <h3>{item.name}</h3>
+                                        <p className="cart-item-price">
+                                            ${item.price} × {item.quantity}
+                                        </p>
+                                    </div>
+                                    <button
+                                        className="remove-btn"
+                                        onClick={() => handleRemove(item.id)}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="cart-summary">
+                            <h3>Total: ${totalPrice.toFixed(2)}</h3>
+                            <button className="checkout-btn" onClick={handleCheckout}>
+                                Place Order
+                            </button>
+                        </div>
+                    </>
+                )}
+
+                {message && <p className="message">{message}</p>}
+            </div>
+        </section>
     );
 }
 
