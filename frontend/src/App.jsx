@@ -5,13 +5,11 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
-import NavBar from "./components/NavBar";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
-import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
 import AdminDashboard from "./pages/AdminDashboard";
-
+import MainLayout from "./components/MainLayout";
 
 const useAuth = () => {
     const token = localStorage.getItem("authToken");
@@ -39,86 +37,24 @@ function App() {
                     element={isAuthenticated ? <Navigate to="/dashboard" /> : <RegisterPage />}
                 />
 
-                {/* Authenticated routes with NavBar + Footer */}
-                <Route
-                    path="/dashboard"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <Dashboard />
-                                <Footer />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/products"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <Products />
-                                <Footer />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/product/:id"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <ProductDetail />
-                                <Footer />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/cart"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <Cart />
-                                <Footer />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/orders"
-                    element={
-                        <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <Orders />
-                                <Footer />
-                            </>
-                        </PrivateRoute>
-                    }
-                />
 
                 <Route
-                    path="/checkout"
+                    path="/"
                     element={
                         <PrivateRoute>
-                            <>
-                                <NavBar />
-                                <Checkout />
-                                <Footer />
-                            </>
+                            <MainLayout />
                         </PrivateRoute>
                     }
-                />
+                >
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="products" element={<Products />} />
+                    <Route path="product/:id" element={<ProductDetail />} />
+                    <Route path="cart" element={<Cart />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="checkout" element={<Checkout />} />
+                </Route>
 
-                <Route path="/admin"
-                       element={<PrivateRoute><AdminDashboard /></PrivateRoute>}
-                />
-
-
+                <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Router>

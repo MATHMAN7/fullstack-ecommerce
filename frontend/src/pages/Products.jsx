@@ -26,25 +26,32 @@ function Products() {
         fetchProducts();
     }, []);
 
+
     if (loading) {
         return (
-            <div className="loading-container">
-                <div className="spinner"></div>
-                <p>Loading products...</p>
+            <div className="page-fade">
+                <div className="loading-container">
+                    <div className="spinner"></div>
+                    <p>Loading products...</p>
+                </div>
             </div>
         );
     }
+
 
     if (error) {
         return (
-            <div className="error-container">
-                <p>{error}</p>
+            <div className="page-fade">
+                <div className="error-container">
+                    <p>{error}</p>
+                </div>
             </div>
         );
     }
 
+    // ✅ Main content with fade-in
     return (
-        <div className="products-container">
+        <div className="page-fade products-container">
             <h2>Our Products</h2>
             {products.length === 0 ? (
                 <p className="no-products">No products found.</p>
@@ -57,12 +64,10 @@ function Products() {
                             ) : (
                                 <div className="placeholder-img">No image</div>
                             )}
-
                             <div className="product-card-content">
                                 <h3>{product.name}</h3>
                                 <p>{product.description}</p>
                                 <p className="product-price">${product.price}</p>
-
                                 <Link to={`/product/${product.id}`} className="add-to-cart-btn">
                                     View Details
                                 </Link>
@@ -76,3 +81,4 @@ function Products() {
 }
 
 export default Products;
+
