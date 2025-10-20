@@ -4,11 +4,18 @@ import "./Orders.css";
 function Orders() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const token = localStorage.getItem("authToken");
+                if (!token) {
+                    setError("You must be logged in to view orders.");
+                    setLoading(false);
+                    return;
+                }
+
                 const response = await fetch("http://localhost:5000/orders", {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -21,8 +28,9 @@ function Orders() {
 
                 const data = await response.json();
                 setOrders(data);
-            } catch (error) {
-                console.error("Error fetching orders:", error);
+            } catch (err) {
+                console.error("Error fetching orders:", err);
+                setError("Unable to load orders. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -32,14 +40,27 @@ function Orders() {
     }, []);
 
     if (loading) {
-        return <p>Loading your orders...</p>;
+        return (
+            <div className="loading-container">
+                <div className="spinner"></div>
+                <p>Loading your orders...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <p>{error}</p>
+            </div>
+        );
     }
 
     return (
         <div className="orders-container">
             <h2>Your Orders</h2>
             {orders.length === 0 ? (
-                <p>You have no orders yet.</p>
+                <p className="no-orders">You have no orders yet.</p>
             ) : (
                 <ul className="orders-list">
                     {orders.map((order) => (
@@ -50,10 +71,11 @@ function Orders() {
                             <ul>
                                 {order.items.map((item, i) => (
                                     <li key={i}>
-                                        Product {item.product_id} × {item.quantity}
+                                        {item.name} × {item.quantity} (${item.price})
                                     </li>
                                 ))}
                             </ul>
+                            <p>Total: ${order.total}</p>
                         </li>
                     ))}
                 </ul>
