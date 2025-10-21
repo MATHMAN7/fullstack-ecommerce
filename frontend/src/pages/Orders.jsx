@@ -16,14 +16,14 @@ function Orders() {
                     return;
                 }
 
-                const response = await fetch("http://localhost:5000/orders", {
+                const response = await fetch("http://localhost:5000/api/orders", {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
 
                 if (!response.ok) {
-                    throw new Error("Failed to fetch orders");
+                    throw new Error(`Failed to fetch orders: ${response.status}`);
                 }
 
                 const data = await response.json();

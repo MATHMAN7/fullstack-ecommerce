@@ -18,10 +18,13 @@ function App() {
     return (
         <Router>
             <Routes>
+
                 <Route
                     path="/"
                     element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />}
                 />
+
+
                 <Route
                     path="/login"
                     element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />}
@@ -31,13 +34,8 @@ function App() {
                     element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
                 />
 
-                <Route
-                    element={
-                        <PrivateRoute>
-                            <MainLayout />
-                        </PrivateRoute>
-                    }
-                >
+
+                <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="products" element={<Products />} />
                     <Route path="product/:id" element={<ProductDetail />} />
@@ -48,12 +46,9 @@ function App() {
 
                 <Route
                     path="/admin"
-                    element={
-                        <PrivateRoute>
-                            <AdminDashboard />
-                        </PrivateRoute>
-                    }
+                    element={<PrivateRoute><AdminDashboard /></PrivateRoute>}
                 />
+
 
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
