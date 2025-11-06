@@ -1,0 +1,8 @@
+.product-detail{
+    background-color: #f9fafb;
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    width:100vw;
+    margin: 0 auto;
+    font-family: "Poppins", sans-serif;
+}

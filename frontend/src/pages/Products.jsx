@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Products.css";
 
-function Products() {
+function Products({ onDataReady }) {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -21,23 +21,14 @@ function Products() {
                 setError("Unable to load products. Please try again later.");
             } finally {
                 setLoading(false);
+                if (onDataReady) onDataReady(); // signal that page is ready
             }
         };
         fetchProducts();
-    }, []);
+    }, [onDataReady]);
 
-
-    if (loading) {
-        return (
-            <div className="page-fade">
-                <div className="loading-container">
-                    <div className="spinner"></div>
-                    <p>Loading products...</p>
-                </div>
-            </div>
-        );
-    }
-
+    // Do not render anything until loading is finished
+    if (loading) return null;
 
     if (error) {
         return (
@@ -49,7 +40,6 @@ function Products() {
         );
     }
 
-    // ✅ Main content with fade-in
     return (
         <div className="page-fade products-container">
             <h2>Our Products</h2>
@@ -81,4 +71,5 @@ function Products() {
 }
 
 export default Products;
+
 

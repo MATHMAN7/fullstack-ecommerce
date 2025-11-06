@@ -11,6 +11,7 @@ import Orders from "./pages/Orders";
 import Checkout from "./pages/Checkout";
 import AdminDashboard from "./pages/AdminDashboard";
 import MainLayout from "./components/MainLayout";
+import RouteTransition from "./components/RouteTransition"; // use your file name here
 
 function App() {
     const isAuthenticated = useMemo(() => !!localStorage.getItem("authToken"), []);
@@ -18,12 +19,10 @@ function App() {
     return (
         <Router>
             <Routes>
-
                 <Route
                     path="/"
                     element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />}
                 />
-
 
                 <Route
                     path="/login"
@@ -34,21 +33,65 @@ function App() {
                     element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
                 />
 
-
                 <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="products" element={<Products />} />
-                    <Route path="product/:id" element={<ProductDetail />} />
-                    <Route path="cart" element={<Cart />} />
-                    <Route path="orders" element={<Orders />} />
-                    <Route path="checkout" element={<Checkout />} />
+                    <Route
+                        path="dashboard"
+                        element={
+                            <RouteTransition>
+                                <Dashboard />
+                            </RouteTransition>
+                        }
+                    />
+                    <Route
+                        path="products"
+                        element={
+                            <RouteTransition>
+                                <Products />
+                            </RouteTransition>
+                        }
+                    />
+                    <Route
+                        path="product/:id"
+                        element={
+                            <RouteTransition>
+                                <ProductDetail />
+                            </RouteTransition>
+                        }
+                    />
+                    <Route
+                        path="cart"
+                        element={
+                            <RouteTransition>
+                                <Cart />
+                            </RouteTransition>
+                        }
+                    />
+                    <Route
+                        path="orders"
+                        element={
+                            <RouteTransition>
+                                <Orders />
+                            </RouteTransition>
+                        }
+                    />
+                    <Route
+                        path="checkout"
+                        element={
+                            <RouteTransition>
+                                <Checkout />
+                            </RouteTransition>
+                        }
+                    />
                 </Route>
 
                 <Route
                     path="/admin"
-                    element={<PrivateRoute><AdminDashboard /></PrivateRoute>}
+                    element={
+                        <PrivateRoute>
+                            <AdminDashboard />
+                        </PrivateRoute>
+                    }
                 />
-
 
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

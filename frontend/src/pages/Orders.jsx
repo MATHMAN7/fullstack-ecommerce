@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Orders.css";
 
-function Orders() {
+function Orders({ onDataReady }) {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -13,13 +13,12 @@ function Orders() {
                 if (!token) {
                     setError("You must be logged in to view orders.");
                     setLoading(false);
+                    if (onDataReady) onDataReady();
                     return;
                 }
 
                 const response = await fetch("http://localhost:5000/api/orders", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
 
                 if (!response.ok) {
@@ -33,20 +32,15 @@ function Orders() {
                 setError("Unable to load orders. Please try again later.");
             } finally {
                 setLoading(false);
+                if (onDataReady) onDataReady(); // signal to PageWrapper that page is ready
             }
         };
 
         fetchOrders();
-    }, []);
+    }, [onDataReady]);
 
-    if (loading) {
-        return (
-            <div className="loading-container">
-                <div className="spinner"></div>
-                <p>Loading your orders...</p>
-            </div>
-        );
-    }
+
+    if (loading) return null;
 
     if (error) {
         return (
