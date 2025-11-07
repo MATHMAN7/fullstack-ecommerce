@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Products.css";
+import PageLoader from "./PageLoader";
 
 function Products({ onDataReady }) {
     const [products, setProducts] = useState([]);
@@ -11,9 +12,7 @@ function Products({ onDataReady }) {
         const fetchProducts = async () => {
             try {
                 const res = await fetch("http://localhost:5000/api/products");
-                if (!res.ok) {
-                    throw new Error("Failed to fetch products");
-                }
+                if (!res.ok) throw new Error("Failed to fetch products");
                 const data = await res.json();
                 setProducts(data);
             } catch (err) {
@@ -21,14 +20,13 @@ function Products({ onDataReady }) {
                 setError("Unable to load products. Please try again later.");
             } finally {
                 setLoading(false);
-                if (onDataReady) onDataReady(); // signal that page is ready
+                if (onDataReady) onDataReady();
             }
         };
         fetchProducts();
     }, [onDataReady]);
 
-    // Do not render anything until loading is finished
-    if (loading) return null;
+    if (loading) return <PageLoader />;  // <— key change
 
     if (error) {
         return (
@@ -71,5 +69,6 @@ function Products({ onDataReady }) {
 }
 
 export default Products;
+
 
 

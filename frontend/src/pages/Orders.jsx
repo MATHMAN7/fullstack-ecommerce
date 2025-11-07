@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Orders.css";
+import PageLoader from "./PageLoader";
 
 function Orders({ onDataReady }) {
     const [orders, setOrders] = useState([]);
@@ -21,10 +22,7 @@ function Orders({ onDataReady }) {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch orders: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`Failed to fetch orders: ${response.status}`);
                 const data = await response.json();
                 setOrders(data);
             } catch (err) {
@@ -32,15 +30,14 @@ function Orders({ onDataReady }) {
                 setError("Unable to load orders. Please try again later.");
             } finally {
                 setLoading(false);
-                if (onDataReady) onDataReady(); // signal to PageWrapper that page is ready
+                if (onDataReady) onDataReady();
             }
         };
 
         fetchOrders();
     }, [onDataReady]);
 
-
-    if (loading) return null;
+    if (loading) return <PageLoader />;  // <— key change
 
     if (error) {
         return (
@@ -79,3 +76,4 @@ function Orders({ onDataReady }) {
 }
 
 export default Orders;
+
