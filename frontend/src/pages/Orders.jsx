@@ -19,10 +19,21 @@ function Orders({ onDataReady }) {
                 }
 
                 const response = await fetch("http://localhost:5000/api/orders", {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`, // make sure backend expects 'Bearer '
+                    },
                 });
 
-                if (!response.ok) throw new Error(`Failed to fetch orders: ${response.status}`);
+                if (response.status === 403) {
+                    setError("You do not have permission to view orders.");
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch orders: ${response.status}`);
+                }
+
                 const data = await response.json();
                 setOrders(data);
             } catch (err) {
@@ -37,7 +48,7 @@ function Orders({ onDataReady }) {
         fetchOrders();
     }, [onDataReady]);
 
-    if (loading) return <PageLoader />;  // <— key change
+    if (loading) return <PageLoader />;
 
     if (error) {
         return (
@@ -76,4 +87,5 @@ function Orders({ onDataReady }) {
 }
 
 export default Orders;
+
 
