@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import './ProductDetail.css'
 
 function ProductDetail() {
     const { id } = useParams();
@@ -46,7 +47,7 @@ function ProductDetail() {
     return (
         <div className="product-detail">
             {product.image ? (
-                <img src={product.image} alt={product.name} />
+                <img src={product.image} alt={product.name} className="placeholder-img" />
             ) : (
                 <div className="placeholder-img">No image</div>
             )}
@@ -55,10 +56,14 @@ function ProductDetail() {
             <p>{product.description}</p>
             <p><strong>Price:</strong> ${product.price}</p>
 
-            <button onClick={handleAddToCart}>Add to Cart</button>
-            <Link to="/cart">Go to Cart</Link>
+            <div className="cart-buttons">
 
-            <Link to="/products">← Back to Products</Link>
+            <button onClick={handleAddToCart} className="Add-to-cart">Add to Cart</button>
+                <div>
+            <Link to="/cart" className="go-to-cart-btn">Go to Cart</Link>
+            <Link to="/products" className="back-to-products-btn">← Back to Products</Link>
+                </div>
+            </div>
         </div>
     );
 }
