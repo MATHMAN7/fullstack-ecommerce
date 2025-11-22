@@ -9,9 +9,8 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
 
-    console.log('Register route hit'); // <-- log
-    console.log('Request body:', req.body); // <-- log request body
-
+    console.log('Register route hit');
+    console.log('Request body:', req.body);
 
     try {
 
@@ -59,12 +58,14 @@ router.post('/login', async (req, res) => {
 
 
         const token = jwt.sign(
-            { id: user.rows[0].id, email: user.rows[0].email },
+            {
+                id: user.rows[0].id,
+                email: user.rows[0].email,
+                is_admin: user.rows[0].is_admin   // <-- IMPORTANT FIX
+            },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
-
-
 
         res.json({ message: 'Logged in', token });
     } catch (err) {
