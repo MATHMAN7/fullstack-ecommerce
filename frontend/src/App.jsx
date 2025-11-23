@@ -87,11 +87,15 @@ function App() {
                 <Route
                     path="/admin"
                     element={
-                        <PrivateRoute>
-                            <AdminDashboard />
+                        <PrivateRoute adminOnly={true}>
+                            <MainLayout>
+                                <AdminDashboard />
+                            </MainLayout>
                         </PrivateRoute>
                     }
                 />
+
+
 
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
