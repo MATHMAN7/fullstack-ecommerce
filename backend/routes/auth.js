@@ -42,6 +42,11 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+    console.log("USER FROM DB:", user.rows[0]);
+    console.log("VALID PASSWORD?", validPassword);
+    console.log("TOKEN:", token);
+
+
 
     try {
 
