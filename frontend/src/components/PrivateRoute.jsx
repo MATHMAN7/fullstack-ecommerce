@@ -1,4 +1,3 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -10,17 +9,15 @@ export default function PrivateRoute({ children, adminOnly = false }) {
     try {
         const decoded = jwtDecode(token);
 
-
         if (decoded.exp * 1000 < Date.now()) {
             localStorage.removeItem("authToken");
             return <Navigate to="/login" replace />;
         }
 
-
         if (adminOnly && !decoded.is_admin) {
             return <Navigate to="/dashboard" replace />;
         }
-    } catch (err) {
+    } catch (e) {
         localStorage.removeItem("authToken");
         return <Navigate to="/login" replace />;
     }
