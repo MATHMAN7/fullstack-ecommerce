@@ -85,15 +85,22 @@ function App() {
                 </Route>
 
                 <Route
-                    path="/admin"
                     element={
                         <PrivateRoute adminOnly={true}>
-                            <MainLayout>
-                                <AdminDashboard />
-                            </MainLayout>
+                            <MainLayout />
                         </PrivateRoute>
                     }
-                />
+                >
+                    <Route
+                        path="/admin"
+                        element={
+                            <RouteTransition>
+                                <AdminDashboard />
+                            </RouteTransition>
+                        }
+                    />
+                </Route>
+
 
 
 

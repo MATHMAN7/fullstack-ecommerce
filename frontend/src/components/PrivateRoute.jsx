@@ -10,13 +10,13 @@ export default function PrivateRoute({ children, adminOnly = false }) {
     try {
         const decoded = jwtDecode(token);
 
-        // Token expiration check
+
         if (decoded.exp * 1000 < Date.now()) {
             localStorage.removeItem("authToken");
             return <Navigate to="/login" replace />;
         }
 
-        // Admin-only route check
+
         if (adminOnly && !decoded.is_admin) {
             return <Navigate to="/dashboard" replace />;
         }
