@@ -1,26 +1,32 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import "./NavBar.css";
-import * as jwtDecode from "jwt-decode"; // ✅ Vite-friendly import
 
 function NavBar() {
     const navigate = useNavigate();
     const location = useLocation();
+
+
+    const token = localStorage.getItem("authToken");
+    let isAdmin = false;
+
+    if (token) {
+        try {
+            const decoded = jwtDecode(token);
+            isAdmin = decoded?.is_admin === true;
+        } catch (err) {
+            console.error("Invalid token", err);
+            localStorage.removeItem("authToken");
+        }
+    }
 
     const handleLogout = () => {
         localStorage.removeItem("authToken");
         navigate("/login");
     };
 
-    const isActive = (path) => (location.pathname === path ? "active-link" : "");
-
-    let isAdmin = false;
-    const token = localStorage.getItem("authToken");
-    if (token) {
-        try {
-            const decoded = jwtDecode.default(token); // ✅ call default
-            isAdmin = decoded.is_admin;
-        } catch {}
-    }
+    const isActive = (path) =>
+        location.pathname === path ? "active-link" : "";
 
     return (
         <nav className="navbar">
@@ -30,21 +36,25 @@ function NavBar() {
                         Dashboard
                     </Link>
                 </li>
+
                 <li>
                     <Link to="/products" className={isActive("/products")}>
                         Products
                     </Link>
                 </li>
+
                 <li>
                     <Link to="/cart" className={isActive("/cart")}>
                         Cart
                     </Link>
                 </li>
+
                 <li>
                     <Link to="/orders" className={isActive("/orders")}>
                         Orders
                     </Link>
                 </li>
+
 
                 {isAdmin && (
                     <li>
@@ -63,3 +73,4 @@ function NavBar() {
 }
 
 export default NavBar;
+
