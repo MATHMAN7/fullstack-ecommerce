@@ -85,6 +85,7 @@ router.delete('/:id', authenticateToken, adminMiddleware, async (req, res) => {
         res.json({ message: 'Product deleted' });
     } catch (err) {
         console.error(err.message);
+        
         res.status(500).send('Server error');
     }
 });
