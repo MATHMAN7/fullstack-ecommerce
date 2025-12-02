@@ -36,7 +36,7 @@ function AdminProducts() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    // Create new product
+
     const handleCreate = async () => {
         try {
             const res = await fetch("http://localhost:5000/products", {
@@ -60,7 +60,7 @@ function AdminProducts() {
         }
     };
 
-    // Edit product (prepare form)
+
     const startEdit = (p) => {
         setEditingId(p.id);
         setForm({
