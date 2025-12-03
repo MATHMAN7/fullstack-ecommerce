@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AdminLayout from "../AdminLayout";
 
 function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -71,7 +72,7 @@ function AdminProducts() {
         });
     };
 
-    // Save edited product
+
     const handleUpdate = async () => {
         try {
             const res = await fetch(`http://localhost:5000/products/${editingId}`, {
@@ -115,6 +116,7 @@ function AdminProducts() {
     if (error) return <p>{error}</p>;
 
     return (
+        <AdminLayout>
         <div className="admin-products">
             <h2>Admin – Manage Products</h2>
 
@@ -162,6 +164,7 @@ function AdminProducts() {
             </table>
 
         </div>
+        </AdminLayout>
     );
 }
 
