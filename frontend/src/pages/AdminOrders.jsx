@@ -9,10 +9,12 @@ function AdminOrders() {
 
     const fetchOrders = async () => {
         try {
-            const res = await fetch("http://localhost:5000/admin/orders", {
+            const res = await fetch("http://localhost:5000/orders/admin/all", {
                 headers: { Authorization: `Bearer ${token}` },
             });
+
             if (!res.ok) throw new Error("Failed to fetch orders");
+
             const data = await res.json();
             setOrders(data);
         } catch (err) {
@@ -29,7 +31,7 @@ function AdminOrders() {
 
     const handleStatusChange = async (id, newStatus) => {
         try {
-            const res = await fetch(`http://localhost:5000/admin/orders/${id}`, {
+            const res = await fetch(`http://localhost:5000/orders/admin/${id}/status`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -37,24 +39,13 @@ function AdminOrders() {
                 },
                 body: JSON.stringify({ status: newStatus }),
             });
-            if (!res.ok) throw new Error("Failed to update order");
-            fetchOrders();
-        } catch (err) {
-            alert("Error updating order");
-        }
-    };
 
-    const handleDelete = async (id) => {
-        if (!confirm("Delete this order?")) return;
-        try {
-            const res = await fetch(`http://localhost:5000/admin/orders/${id}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!res.ok) throw new Error("Failed to delete order");
+            if (!res.ok) throw new Error("Failed to update order");
+
             fetchOrders();
         } catch (err) {
-            alert("Error deleting order");
+            console.error(err);
+            alert("Error updating order");
         }
     };
 
@@ -64,7 +55,8 @@ function AdminOrders() {
     return (
         <AdminLayout>
             <div className="admin-orders">
-                <h2>Admin – Manage Orders</h2>
+                <h2>Manage Orders</h2>
+
                 <table className="admin-table">
                     <thead>
                     <tr>
@@ -73,33 +65,38 @@ function AdminOrders() {
                         <th>Products</th>
                         <th>Total</th>
                         <th>Status</th>
-                        <th>Actions</th>
                     </tr>
                     </thead>
+
                     <tbody>
                     {orders.map((order) => (
                         <tr key={order.id}>
                             <td>{order.id}</td>
-                            <td>{order.user_email}</td>
+
+                            <td>{order.email}</td>
+
                             <td>
-                                {order.items.map((i) => (
-                                    <div key={i.id}>{i.name} x{i.quantity}</div>
+                                {order.items.map((item) => (
+                                    <div key={item.product_id}>
+                                        {item.name} × {item.quantity}
+                                    </div>
                                 ))}
                             </td>
+
                             <td>${order.total.toFixed(2)}</td>
+
                             <td>
                                 <select
                                     value={order.status}
-                                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                                    onChange={(e) =>
+                                        handleStatusChange(order.id, e.target.value)
+                                    }
                                 >
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Shipped</option>
-                                    <option value="Delivered">Delivered</option>
+                                    <option value="pending">pending</option>
+                                    <option value="processing">processing</option>
+                                    <option value="completed">completed</option>
+                                    <option value="cancelled">cancelled</option>
                                 </select>
-                            </td>
-                            <td>
-                                <button onClick={() => handleDelete(order.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -111,3 +108,4 @@ function AdminOrders() {
 }
 
 export default AdminOrders;
+
