@@ -1,5 +1,6 @@
 import pool from "../db.js";
 
+
 export const getAllOrders = async () => {
     const result = await pool.query(`
         SELECT o.id, o.user_id, o.total, o.status, o.created_at,
@@ -11,3 +12,41 @@ export const getAllOrders = async () => {
 
     return result.rows;
 };
+
+
+export const updateOrderStatus = async (id, status) => {
+
+    const result = await pool.query(
+        `
+        UPDATE orders
+        SET status = $1
+        WHERE id = $2
+        RETURNING *
+        `,
+        [status, id]
+    );
+
+
+    if (result.rowCount === 0) return null;
+
+    return result.rows[0];
+};
+
+
+export const deleteOrder = async (id) => {
+
+    const result = await pool.query(
+        `
+        DELETE FROM orders
+        WHERE id = $1
+        RETURNING id
+        `,
+        [id]
+    );
+
+
+    if (result.rowCount === 0) return false;
+
+    return true;
+};
+
