@@ -4,24 +4,29 @@ import AdminLayout from "../AdminLayout";
 function AdminProducts() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+
     const [form, setForm] = useState({
         name: "",
         description: "",
         price: "",
-        image: ""
+        image: "",
     });
-    const [editingId, setEditingId] = useState(null);
 
+    const [editingId, setEditingId] = useState(null);
     const token = localStorage.getItem("authToken");
 
 
     const fetchProducts = async () => {
         try {
+            setLoading(true);
             const res = await fetch("http://localhost:5000/products");
+            if (!res.ok) throw new Error();
             const data = await res.json();
             setProducts(data);
-        } catch (err) {
+        } catch {
             setError("Failed to load products");
         } finally {
             setLoading(false);
@@ -37,133 +42,207 @@ function AdminProducts() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const resetForm = () => {
+        setForm({ name: "", description: "", price: "", image: "" });
+        setEditingId(null);
+    };
+
 
     const handleCreate = async () => {
+        setSubmitting(true);
+        setMessage("");
+        setError("");
+
         try {
             const res = await fetch("http://localhost:5000/products", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(form),
             });
 
-            if (!res.ok) {
-                const msg = await res.text();
-                return alert("Error creating product: " + msg);
-            }
+            if (!res.ok) throw new Error();
 
-            setForm({ name: "", description: "", price: "", image: "" });
+            setMessage("✅ Product created successfully");
+            resetForm();
             fetchProducts();
-        } catch (err) {
-            alert("Failed to create product");
+        } catch {
+            setError("❌ Failed to create product");
+        } finally {
+            setSubmitting(false);
         }
     };
 
 
-    const startEdit = (p) => {
-        setEditingId(p.id);
+    const startEdit = (product) => {
+        setEditingId(product.id);
         setForm({
-            name: p.name,
-            description: p.description,
-            price: p.price,
-            image: p.image,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            image: product.image,
         });
+        setMessage("");
+        setError("");
     };
 
 
     const handleUpdate = async () => {
+        setSubmitting(true);
+        setMessage("");
+        setError("");
+
         try {
-            const res = await fetch(`http://localhost:5000/products/${editingId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify(form),
-            });
+            const res = await fetch(
+                `http://localhost:5000/products/${editingId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(form),
+                }
+            );
 
-            if (!res.ok) return alert("Error updating product");
+            if (!res.ok) throw new Error();
 
-            setEditingId(null);
-            setForm({ name: "", description: "", price: "", image: "" });
+            setMessage("✅ Product updated successfully");
+            resetForm();
             fetchProducts();
-        } catch (err) {
-            alert("Failed to update product");
+        } catch {
+            setError("❌ Failed to update product");
+        } finally {
+            setSubmitting(false);
         }
     };
 
-    // Delete  product
+
     const handleDelete = async (id) => {
         if (!confirm("Delete this product?")) return;
 
+        setSubmitting(true);
+        setMessage("");
+        setError("");
+
         try {
-            const res = await fetch(`http://localhost:5000/products/${id}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const res = await fetch(
+                `http://localhost:5000/products/${id}`,
+                {
+                    method: "DELETE",
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
 
-            if (!res.ok) return alert("Error deleting");
+            if (!res.ok) throw new Error();
 
+            setMessage("🗑️ Product deleted");
             fetchProducts();
-        } catch (err) {
-            alert("Failed to delete product");
+        } catch {
+            setError(" Failed to delete product");
+        } finally {
+            setSubmitting(false);
         }
     };
 
     if (loading) return <p>Loading products...</p>;
-    if (error) return <p>{error}</p>;
 
     return (
         <AdminLayout>
-        <div className="admin-products">
-            <h2>Admin – Manage Products</h2>
+            <div className="admin-products">
+                <h2>Admin – Manage Products</h2>
 
-            <h3>{editingId ? "Edit Product" : "Create Product"}</h3>
+                {message && <p className="admin-success">{message}</p>}
+                {error && <p className="admin-error">{error}</p>}
 
-            <div className="product-form">
-                <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
-                <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
-                <input name="price" type="number" placeholder="Price" value={form.price} onChange={handleChange} />
-                <input name="image" placeholder="Image URL" value={form.image} onChange={handleChange} />
+                <h3>{editingId ? "Edit Product" : "Create Product"}</h3>
 
-                {editingId ? (
-                    <button onClick={handleUpdate}>Save Changes</button>
-                ) : (
-                    <button onClick={handleCreate}>Add Product</button>
-                )}
-            </div>
+                <div className="product-form">
+                    <input
+                        name="name"
+                        placeholder="Name"
+                        value={form.name}
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="description"
+                        placeholder="Description"
+                        value={form.description}
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="price"
+                        type="number"
+                        placeholder="Price"
+                        value={form.price}
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="image"
+                        placeholder="Image URL"
+                        value={form.image}
+                        onChange={handleChange}
+                    />
 
-            <h3>All Products</h3>
+                    {editingId ? (
+                        <>
+                            <button
+                                onClick={handleUpdate}
+                                disabled={submitting}
+                            >
+                                Save Changes
+                            </button>
+                            <button onClick={resetForm}>Cancel</button>
+                        </>
+                    ) : (
+                        <button
+                            onClick={handleCreate}
+                            disabled={submitting}
+                        >
+                            Add Product
+                        </button>
+                    )}
+                </div>
 
-            <table className="admin-table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Image</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {products.map((p) => (
-                    <tr key={p.id}>
-                        <td>{p.id}</td>
-                        <td>{p.name}</td>
-                        <td>${p.price}</td>
-                        <td><img src={p.image} width="50" /></td>
-                        <td>
-                            <button onClick={() => startEdit(p)}>Edit</button>
-                            <button onClick={() => handleDelete(p.id)}>Delete</button>
-                        </td>
+                <h3>All Products</h3>
+
+                <table className="admin-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Image</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
-
-        </div>
+                    </thead>
+                    <tbody>
+                    {products.map((p) => (
+                        <tr key={p.id}>
+                            <td>{p.id}</td>
+                            <td>{p.name}</td>
+                            <td>${p.price}</td>
+                            <td>
+                                <img src={p.image} width="50" />
+                            </td>
+                            <td>
+                                <button onClick={() => startEdit(p)}>
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(p.id)}
+                                    disabled={submitting}
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </AdminLayout>
     );
 }
