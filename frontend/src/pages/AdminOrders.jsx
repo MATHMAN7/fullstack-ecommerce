@@ -5,12 +5,15 @@ function AdminOrders() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
     const token = localStorage.getItem("authToken");
 
     const fetchOrders = async () => {
         try {
             const res = await fetch("http://localhost:5000/orders/admin/all", {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             if (!res.ok) throw new Error("Failed to fetch orders");
@@ -29,16 +32,19 @@ function AdminOrders() {
         fetchOrders();
     }, []);
 
-    const handleStatusChange = async (id, newStatus) => {
+    const handleStatusChange = async (id, status) => {
         try {
-            const res = await fetch(`http://localhost:5000/orders/admin/${id}/status`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ status: newStatus }),
-            });
+            const res = await fetch(
+                `http://localhost:5000/orders/admin/${id}/status`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ status }),
+                }
+            );
 
             if (!res.ok) throw new Error("Failed to update order");
 
@@ -62,7 +68,6 @@ function AdminOrders() {
                     <tr>
                         <th>ID</th>
                         <th>User</th>
-                        <th>Products</th>
                         <th>Total</th>
                         <th>Status</th>
                     </tr>
@@ -73,29 +78,30 @@ function AdminOrders() {
                         <tr key={order.id}>
                             <td>{order.id}</td>
 
-                            <td>{order.email}</td>
+                            <td>{order.user_email}</td>
 
-                            <td>
-                                {order.items.map((item) => (
-                                    <div key={item.product_id}>
-                                        {item.name} × {item.quantity}
-                                    </div>
-                                ))}
-                            </td>
-
-                            <td>${order.total.toFixed(2)}</td>
+                            <td>${Number(order.total).toFixed(2)}</td>
 
                             <td>
                                 <select
                                     value={order.status}
                                     onChange={(e) =>
-                                        handleStatusChange(order.id, e.target.value)
+                                        handleStatusChange(
+                                            order.id,
+                                            e.target.value
+                                        )
                                     }
                                 >
                                     <option value="pending">pending</option>
-                                    <option value="processing">processing</option>
-                                    <option value="completed">completed</option>
-                                    <option value="cancelled">cancelled</option>
+                                    <option value="processing">
+                                        processing
+                                    </option>
+                                    <option value="completed">
+                                        completed
+                                    </option>
+                                    <option value="cancelled">
+                                        cancelled
+                                    </option>
                                 </select>
                             </td>
                         </tr>
@@ -108,3 +114,4 @@ function AdminOrders() {
 }
 
 export default AdminOrders;
+
