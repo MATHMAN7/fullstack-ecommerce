@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "./AdminLayout";
 
 function AdminUsers() {
     const [users, setUsers] = useState([]);
