@@ -11,6 +11,7 @@ function Orders({ onDataReady }) {
         const fetchOrders = async () => {
             try {
                 const token = localStorage.getItem("authToken");
+
                 if (!token) {
                     setError("You must be logged in to view orders.");
                     setLoading(false);
@@ -21,7 +22,7 @@ function Orders({ onDataReady }) {
                 const response = await fetch("http://localhost:5000/api/orders", {
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`, // make sure backend expects 'Bearer '
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
@@ -35,7 +36,9 @@ function Orders({ onDataReady }) {
                 }
 
                 const data = await response.json();
-                setOrders(data);
+
+                // Ensure we always work with an array
+                setOrders(Array.isArray(data) ? data : []);
             } catch (err) {
                 console.error("Error fetching orders:", err);
                 setError("Unable to load orders. Please try again later.");
@@ -61,6 +64,7 @@ function Orders({ onDataReady }) {
     return (
         <div className="orders-container">
             <h2>Your Orders</h2>
+
             {orders.length === 0 ? (
                 <p className="no-orders">You have no orders yet.</p>
             ) : (
@@ -69,14 +73,23 @@ function Orders({ onDataReady }) {
                         <li key={order.id} className="order-card">
                             <h3>Order #{order.id}</h3>
                             <p>Status: {order.status}</p>
-                            <p>Date: {new Date(order.created_at).toLocaleString()}</p>
-                            <ul>
-                                {order.items.map((item, i) => (
-                                    <li key={i}>
-                                        {item.name} × {item.quantity} (${item.price})
-                                    </li>
-                                ))}
-                            </ul>
+                            <p>
+                                Date:{" "}
+                                {order.created_at
+                                    ? new Date(order.created_at).toLocaleString()
+                                    : "N/A"}
+                            </p>
+
+                            {Array.isArray(order.items) && order.items.length > 0 && (
+                                <ul className="order-items">
+                                    {order.items.map((item, i) => (
+                                        <li key={i}>
+                                            {item.name} × {item.quantity} (${item.price})
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+
                             <p>Total: ${order.total}</p>
                         </li>
                     ))}

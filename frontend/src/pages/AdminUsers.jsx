@@ -10,21 +10,24 @@ function AdminUsers() {
 
     const token = localStorage.getItem("authToken");
 
-
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const res = await fetch("http://localhost:5000/users", {
+            setError("");
+
+            const res = await fetch("http://localhost:5000/admin/users", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
 
-            if (!res.ok) throw new Error();
+            if (!res.ok) {
+                throw new Error("Failed to fetch users");
+            }
 
             const data = await res.json();
             setUsers(data);
-        } catch {
+        } catch (err) {
             setError("Failed to load users");
         } finally {
             setLoading(false);
@@ -35,7 +38,6 @@ function AdminUsers() {
         fetchUsers();
     }, []);
 
-
     const toggleAdmin = async (user) => {
         setSubmitting(true);
         setError("");
@@ -43,7 +45,7 @@ function AdminUsers() {
 
         try {
             const res = await fetch(
-                `http://localhost:5000/users/${user.id}`,
+                `http://localhost:5000/admin/users/${user.id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -56,20 +58,21 @@ function AdminUsers() {
                 }
             );
 
-            if (!res.ok) throw new Error();
+            if (!res.ok) {
+                throw new Error("Failed to update user");
+            }
 
-            setMessage("✅ User role updated");
-            fetchUsers();
-        } catch {
-            setError("❌ Failed to update user role");
+            setMessage("User role updated successfully");
+            await fetchUsers();
+        } catch (err) {
+            setError("Failed to update user role");
         } finally {
             setSubmitting(false);
         }
     };
 
-
     const deleteUser = async (id) => {
-        if (!confirm("Delete this user?")) return;
+        if (!window.confirm("Delete this user?")) return;
 
         setSubmitting(true);
         setError("");
@@ -77,7 +80,7 @@ function AdminUsers() {
 
         try {
             const res = await fetch(
-                `http://localhost:5000/users/${id}`,
+                `http://localhost:5000/admin/users/${id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -86,18 +89,26 @@ function AdminUsers() {
                 }
             );
 
-            if (!res.ok) throw new Error();
+            if (!res.ok) {
+                throw new Error("Failed to delete user");
+            }
 
-            setMessage("🗑️ User deleted");
-            fetchUsers();
-        } catch {
-            setError("❌ Failed to delete user");
+            setMessage("User deleted successfully");
+            await fetchUsers();
+        } catch (err) {
+            setError("Failed to delete user");
         } finally {
             setSubmitting(false);
         }
     };
 
-    if (loading) return <p>Loading users...</p>;
+    if (loading) {
+        return (
+            <AdminLayout>
+                <p>Loading users...</p>
+            </AdminLayout>
+        );
+    }
 
     return (
         <AdminLayout>
@@ -122,17 +133,13 @@ function AdminUsers() {
                         <tr key={user.id}>
                             <td>{user.id}</td>
                             <td>{user.email}</td>
-                            <td>
-                                {user.is_admin ? "✅ Yes" : "No"}
-                            </td>
+                            <td>{user.is_admin ? "Yes" : "No"}</td>
                             <td>
                                 <button
                                     onClick={() => toggleAdmin(user)}
                                     disabled={submitting}
                                 >
-                                    {user.is_admin
-                                        ? "Revoke Admin"
-                                        : "Make Admin"}
+                                    {user.is_admin ? "Revoke Admin" : "Make Admin"}
                                 </button>
 
                                 <button
@@ -152,3 +159,4 @@ function AdminUsers() {
 }
 
 export default AdminUsers;
+
