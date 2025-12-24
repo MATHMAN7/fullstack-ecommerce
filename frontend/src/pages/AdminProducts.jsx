@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
+import './AdminProducts.css'
 
 function AdminProducts() {
     const [products, setProducts] = useState([]);
