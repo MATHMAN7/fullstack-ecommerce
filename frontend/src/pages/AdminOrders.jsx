@@ -10,7 +10,10 @@ function AdminOrders() {
 
     const fetchOrders = async () => {
         try {
-            const res = await fetch("http://localhost:5000/orders/admin/all", {
+            setLoading(true);
+            setError("");
+
+            const res = await fetch("http://localhost:5000/admin/orders", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -29,13 +32,13 @@ function AdminOrders() {
     };
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        if (token) fetchOrders();
+    }, [token]);
 
     const handleStatusChange = async (id, status) => {
         try {
             const res = await fetch(
-                `http://localhost:5000/orders/admin/${id}/status`,
+                `http://localhost:5000/admin/orders/${id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -77,11 +80,8 @@ function AdminOrders() {
                     {orders.map((order) => (
                         <tr key={order.id}>
                             <td>{order.id}</td>
-
                             <td>{order.user_email}</td>
-
                             <td>${Number(order.total).toFixed(2)}</td>
-
                             <td>
                                 <select
                                     value={order.status}
@@ -93,15 +93,9 @@ function AdminOrders() {
                                     }
                                 >
                                     <option value="pending">pending</option>
-                                    <option value="processing">
-                                        processing
-                                    </option>
-                                    <option value="completed">
-                                        completed
-                                    </option>
-                                    <option value="cancelled">
-                                        cancelled
-                                    </option>
+                                    <option value="processing">processing</option>
+                                    <option value="completed">completed</option>
+                                    <option value="cancelled">cancelled</option>
                                 </select>
                             </td>
                         </tr>
@@ -114,5 +108,4 @@ function AdminOrders() {
 }
 
 export default AdminOrders;
-
 
