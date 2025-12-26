@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
-import './AdminProducts.css'
+import './AdminProducts.css';
 
 function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -19,15 +19,22 @@ function AdminProducts() {
     const [editingId, setEditingId] = useState(null);
     const token = localStorage.getItem("authToken");
 
-
+    // ----------------------
+    // FETCH PRODUCTS
+    // ----------------------
     const fetchProducts = async () => {
+        if (!token) return;
         try {
             setLoading(true);
-            const res = await fetch("http://localhost:5000/products");
-            if (!res.ok) throw new Error();
+            setError("");
+            const res = await fetch("http://localhost:5000/admin/products", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) throw new Error("Failed to load products");
             const data = await res.json();
             setProducts(data);
-        } catch {
+        } catch (err) {
+            console.error(err);
             setError("Failed to load products");
         } finally {
             setLoading(false);
@@ -36,26 +43,31 @@ function AdminProducts() {
 
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [token]);
 
-
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    // ----------------------
+    // FORM HANDLERS
+    // ----------------------
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
     const resetForm = () => {
         setForm({ name: "", description: "", price: "", image: "" });
         setEditingId(null);
+        setMessage("");
+        setError("");
     };
 
-
+    // ----------------------
+    // CREATE PRODUCT
+    // ----------------------
     const handleCreate = async () => {
+        if (!token) return;
         setSubmitting(true);
         setMessage("");
         setError("");
 
         try {
-            const res = await fetch("http://localhost:5000/products", {
+            const res = await fetch("http://localhost:5000/admin/products", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -63,9 +75,7 @@ function AdminProducts() {
                 },
                 body: JSON.stringify(form),
             });
-
             if (!res.ok) throw new Error();
-
             setMessage("✅ Product created successfully");
             resetForm();
             fetchProducts();
@@ -76,7 +86,9 @@ function AdminProducts() {
         }
     };
 
-
+    // ----------------------
+    // EDIT PRODUCT
+    // ----------------------
     const startEdit = (product) => {
         setEditingId(product.id);
         setForm({
@@ -89,27 +101,22 @@ function AdminProducts() {
         setError("");
     };
 
-
     const handleUpdate = async () => {
+        if (!token) return;
         setSubmitting(true);
         setMessage("");
         setError("");
 
         try {
-            const res = await fetch(
-                `http://localhost:5000/products/${editingId}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(form),
-                }
-            );
-
+            const res = await fetch(`http://localhost:5000/admin/products/${editingId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(form),
+            });
             if (!res.ok) throw new Error();
-
             setMessage("✅ Product updated successfully");
             resetForm();
             fetchProducts();
@@ -120,8 +127,11 @@ function AdminProducts() {
         }
     };
 
-
+    // ----------------------
+    // DELETE PRODUCT
+    // ----------------------
     const handleDelete = async (id) => {
+        if (!token) return;
         if (!confirm("Delete this product?")) return;
 
         setSubmitting(true);
@@ -129,20 +139,15 @@ function AdminProducts() {
         setError("");
 
         try {
-            const res = await fetch(
-                `http://localhost:5000/products/${id}`,
-                {
-                    method: "DELETE",
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-
+            const res = await fetch(`http://localhost:5000/admin/products/${id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+            });
             if (!res.ok) throw new Error();
-
             setMessage("🗑️ Product deleted");
             fetchProducts();
         } catch {
-            setError(" Failed to delete product");
+            setError("❌ Failed to delete product");
         } finally {
             setSubmitting(false);
         }
@@ -189,19 +194,13 @@ function AdminProducts() {
 
                     {editingId ? (
                         <>
-                            <button
-                                onClick={handleUpdate}
-                                disabled={submitting}
-                            >
+                            <button onClick={handleUpdate} disabled={submitting}>
                                 Save Changes
                             </button>
                             <button onClick={resetForm}>Cancel</button>
                         </>
                     ) : (
-                        <button
-                            onClick={handleCreate}
-                            disabled={submitting}
-                        >
+                        <button onClick={handleCreate} disabled={submitting}>
                             Add Product
                         </button>
                     )}
@@ -229,9 +228,7 @@ function AdminProducts() {
                                 <img src={p.image} width="50" />
                             </td>
                             <td>
-                                <button onClick={() => startEdit(p)}>
-                                    Edit
-                                </button>
+                                <button onClick={() => startEdit(p)}>Edit</button>
                                 <button
                                     onClick={() => handleDelete(p.id)}
                                     disabled={submitting}
@@ -249,3 +246,4 @@ function AdminProducts() {
 }
 
 export default AdminProducts;
+
