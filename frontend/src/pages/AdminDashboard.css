@@ -81,3 +81,72 @@
     transform: translateY(-4px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.18);
 }
+@media (max-width: 1024px) {
+    .admin-sidebar {
+        width: 200px;
+        padding: 16px;
+    }
+
+    .sidebar-title {
+        font-size: 1.2rem;
+        margin-bottom: 16px;
+    }
+
+    .stats-grid,
+    .link-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .mg-card {
+        padding: 16px;
+    }
+
+    .admin-main {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .stats-grid,
+    .link-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .admin-main {
+        padding: 16px;
+    }
+
+    .mg-card {
+        padding: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-sidebar {
+        padding: 8px;
+    }
+
+    .sidebar-title {
+        font-size: 1rem;
+    }
+
+    .mg-card {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    .admin-main {
+        padding: 12px;
+    }
+}

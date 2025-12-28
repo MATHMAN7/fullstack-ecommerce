@@ -56,3 +56,61 @@
     flex: 1;
     padding: 2rem;
 }
+@media (max-width: 1024px) {
+    .dashboard-content {
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .welcome-card {
+        flex: 0 0 300px;
+        padding: 1.6rem;
+    }
+
+    .dash-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-content {
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+    }
+
+    .welcome-card {
+        width: 100%;
+        flex: none;
+    }
+
+    .main-content {
+        padding: 1.5rem 1rem;
+    }
+
+    .dash-title {
+        font-size: 22px;
+    }
+
+    .user-info p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: 1.2rem 0.8rem;
+    }
+
+    .welcome-card {
+        padding: 1.4rem 1.2rem;
+    }
+
+    .dash-title {
+        font-size: 20px;
+    }
+
+    .welcome-card button {
+        font-size: 15px;
+        padding: 10px;
+    }
+}

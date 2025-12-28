@@ -37,3 +37,39 @@
 .confirm-btn:hover {
     background: #0056b3;
 }
+@media (max-width: 768px) {
+    .checkout-container {
+        margin: 16px 1rem;
+        padding: 16px;
+    }
+
+    .checkout-section h3 {
+        font-size: 1.05rem;
+    }
+
+    .checkout-section input {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    .confirm-btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-container {
+        margin: 12px 0.8rem;
+        padding: 14px;
+    }
+
+    .checkout-section h3 {
+        font-size: 1rem;
+    }
+
+    .confirm-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+}
