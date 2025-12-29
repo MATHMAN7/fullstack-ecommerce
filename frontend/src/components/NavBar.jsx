@@ -1,11 +1,12 @@
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import "./NavBar.css";
 
 function NavBar() {
+    const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-
 
     const token = localStorage.getItem("authToken");
     let isAdmin = false;
@@ -25,40 +26,45 @@ function NavBar() {
         navigate("/login");
     };
 
-    const isActive = (path) =>
-        location.pathname === path ? "active-link" : "";
+    const isActive = (path) => location.pathname === path ? "active-link" : "";
 
     return (
         <nav className="navbar">
-            <ul className="navbar-list">
+            <div className="navbar-brand">
+                <span className="burger" onClick={() => setMenuOpen(!menuOpen)}>
+                    &#9776;
+                </span>
+                <Link to="/dashboard" className="brand-title">MyShop</Link>
+            </div>
+
+            <ul className={`navbar-list ${menuOpen ? "open" : ""}`}>
                 <li>
-                    <Link to="/dashboard" className={isActive("/dashboard")}>
+                    <Link to="/dashboard" className={isActive("/dashboard")} onClick={() => setMenuOpen(false)}>
                         Dashboard
                     </Link>
                 </li>
 
                 <li>
-                    <Link to="/products" className={isActive("/products")}>
+                    <Link to="/products" className={isActive("/products")} onClick={() => setMenuOpen(false)}>
                         Products
                     </Link>
                 </li>
 
                 <li>
-                    <Link to="/cart" className={isActive("/cart")}>
+                    <Link to="/cart" className={isActive("/cart")} onClick={() => setMenuOpen(false)}>
                         Cart
                     </Link>
                 </li>
 
                 <li>
-                    <Link to="/orders" className={isActive("/orders")}>
+                    <Link to="/orders" className={isActive("/orders")} onClick={() => setMenuOpen(false)}>
                         Orders
                     </Link>
                 </li>
 
-
                 {isAdmin && (
                     <li>
-                        <Link to="/admin" className={isActive("/admin")}>
+                        <Link to="/admin" className={isActive("/admin")} onClick={() => setMenuOpen(false)}>
                             Admin Dashboard
                         </Link>
                     </li>
@@ -73,4 +79,3 @@ function NavBar() {
 }
 
 export default NavBar;
-

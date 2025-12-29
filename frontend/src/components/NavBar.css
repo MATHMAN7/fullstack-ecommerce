@@ -5,10 +5,28 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.8rem 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
     z-index: 1000;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brand-title {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.burger {
+    display: none;
+    font-size: 1.8rem;
+    cursor: pointer;
 }
 
 .navbar-list {
@@ -49,4 +67,40 @@
 
 .navbar-list button:hover {
     background: #e03d00;
+}
+
+@media (max-width: 768px) {
+    .burger {
+        display: block;
+    }
+
+    .navbar-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #1e1f26;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.3s ease;
+    }
+
+    .navbar-list.open {
+        max-height: 500px;
+        padding: 1rem 0;
+    }
+
+    .navbar-list li {
+        width: 100%;
+        padding: 0.5rem 2rem;
+    }
+
+    .navbar-list a,
+    .navbar-list button {
+        width: 100%;
+        text-align: left;
+    }
 }
