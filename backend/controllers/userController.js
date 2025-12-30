@@ -1,73 +1,78 @@
-import {
-    getAllUsersService,
-    getUserByIdService,
-    updateUserService,
-    deleteUserService
-} from "../services/userService.js";
-
+import pool from "../db.js";
 
 export const getAllUsers = async (req, res) => {
     try {
-        if (!req.user.is_admin) return res.status(403).json({ message: "Admins only." });
-
-        const users = await getAllUsersService();
-        res.json(users);
+        const result = await pool.query(
+            "SELECT id, email, is_admin FROM users ORDER BY id ASC"
+        );
+        res.json(result.rows);
     } catch (err) {
-        console.error("User controller error:", err);
+        console.error("GET ALL USERS ERROR:", err);
         res.status(500).json({ message: "Server error" });
     }
 };
-
 
 export const getUserById = async (req, res) => {
     const { id } = req.params;
 
-    if (!req.user.is_admin && req.user.id !== parseInt(id)) {
+    if (!req.user.is_admin && req.user.id !== Number(id)) {
         return res.status(403).json({ message: "Forbidden" });
     }
 
     try {
-        const user = await getUserByIdService(id);
-        if (!user) return res.status(404).json({ message: "User not found" });
+        const result = await pool.query(
+            "SELECT id, email, is_admin FROM users WHERE id = $1",
+            [id]
+        );
 
-        res.json(user);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(result.rows[0]);
     } catch (err) {
-        console.error("User controller error:", err);
+        console.error("GET USER ERROR:", err);
         res.status(500).json({ message: "Server error" });
     }
 };
-
 
 export const updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, email, is_admin } = req.body;
-
-    if (!req.user.is_admin) return res.status(403).json({ message: "Admins only." });
+    const { is_admin } = req.body;
 
     try {
-        const updatedUser = await updateUserService(id, { name, email, is_admin });
-        if (!updatedUser) return res.status(404).json({ message: "User not found" });
+        const result = await pool.query(
+            "UPDATE users SET is_admin = $1 WHERE id = $2 RETURNING id, email, is_admin",
+            [is_admin, id]
+        );
 
-        res.json(updatedUser);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(result.rows[0]);
     } catch (err) {
-        console.error("User controller error:", err);
+        console.error("UPDATE USER ERROR:", err);
         res.status(500).json({ message: "Server error" });
     }
 };
-
 
 export const deleteUser = async (req, res) => {
     const { id } = req.params;
 
-    if (!req.user.is_admin) return res.status(403).json({ message: "Admins only." });
-
     try {
-        const deleted = await deleteUserService(id);
-        if (!deleted) return res.status(404).json({ message: "User not found" });
+        const result = await pool.query(
+            "DELETE FROM users WHERE id = $1 RETURNING id",
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
         res.json({ message: "User deleted" });
     } catch (err) {
-        console.error("User controller error:", err);
+        console.error("DELETE USER ERROR:", err);
         res.status(500).json({ message: "Server error" });
     }
 };
