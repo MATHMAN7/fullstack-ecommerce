@@ -44,9 +44,9 @@ export const createProduct = async (data) => {
 
     const result = await pool.query(
         `
-        INSERT INTO products (name, description, price, image)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *
+            INSERT INTO products (name, description, price, image)
+            VALUES ($1, $2, $3, $4)
+                RETURNING *
         `,
         [
             name.trim(),
@@ -72,14 +72,14 @@ export const updateProduct = async (id, data) => {
 
     const result = await pool.query(
         `
-        UPDATE products
-        SET
-            name = COALESCE($1, name),
-            description = COALESCE($2, description),
-            price = COALESCE($3, price),
-            image = COALESCE($4, image)
-        WHERE id = $5
-        RETURNING *
+            UPDATE products
+            SET
+                name = COALESCE($1, name),
+                description = COALESCE($2, description),
+                price = COALESCE($3, price),
+                image = COALESCE($4, image)
+            WHERE id = $5
+                RETURNING *
         `,
         [
             name?.trim() ?? null,
@@ -112,4 +112,3 @@ export const deleteProduct = async (id) => {
 
     return { message: "Product deleted" };
 };
-
