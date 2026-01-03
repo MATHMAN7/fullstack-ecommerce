@@ -37,11 +37,19 @@ export const getProductById = async (req, res) => {
 // ----------------------
 export const createProduct = async (req, res) => {
     try {
-        const newProduct = await createProductService(req.body);
+        const image = req.file
+            ? `/uploads/products/${req.file.filename}`
+            : null;
+
+        const newProduct = await createProductService({
+            ...req.body,
+            image,
+        });
+
         res.status(201).json(newProduct);
     } catch (err) {
         console.error("Error creating product:", err);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: err.message || "Server error" });
     }
 };
 
@@ -50,13 +58,27 @@ export const createProduct = async (req, res) => {
 // ----------------------
 export const updateProduct = async (req, res) => {
     try {
-        const updatedProduct = await updateProductService(req.params.id, req.body);
+        const image = req.file
+            ? `/uploads/products/${req.file.filename}`
+            : undefined; // undefined = do not overwrite
+
+        const updatedProduct = await updateProductService(
+            req.params.id,
+            {
+                ...req.body,
+                ...(image && { image }),
+            }
+        );
+
         res.json(updatedProduct);
     } catch (err) {
         console.error("Error updating product:", err);
-        res.status(err.message === "Product not found" ? 404 : 500).json({ message: err.message });
+        res.status(
+            err.message === "Product not found" ? 404 : 500
+        ).json({ message: err.message });
     }
 };
+
 
 // ----------------------
 // DELETE PRODUCT
