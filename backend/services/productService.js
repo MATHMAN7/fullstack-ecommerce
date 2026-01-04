@@ -1,4 +1,3 @@
-// backend/services/productService.js
 import pool from "../db.js";
 
 // ----------------------
@@ -31,7 +30,7 @@ export const getProductById = async (id) => {
 // CREATE PRODUCT
 // ----------------------
 export const createProduct = async (data) => {
-    const { name, description, price, image } = data;
+    const { name, description, price, stock, images } = data;
 
     if (!name || !price) {
         throw new Error("Name and price are required");
@@ -44,15 +43,16 @@ export const createProduct = async (data) => {
 
     const result = await pool.query(
         `
-            INSERT INTO products (name, description, price, image)
-            VALUES ($1, $2, $3, $4)
-                RETURNING *
+            INSERT INTO products (name, description, price, stock, images)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *
         `,
         [
             name.trim(),
             description || "",
             parsedPrice,
-            image || ""
+            stock || 0,
+            images || []
         ]
     );
 
@@ -63,7 +63,7 @@ export const createProduct = async (data) => {
 // UPDATE PRODUCT
 // ----------------------
 export const updateProduct = async (id, data) => {
-    const { name, description, price, image } = data;
+    const { name, description, price, stock, images } = data;
 
     const parsedPrice = price !== undefined ? Number(price) : null;
     if (price !== undefined && isNaN(parsedPrice)) {
@@ -77,15 +77,17 @@ export const updateProduct = async (id, data) => {
                 name = COALESCE($1, name),
                 description = COALESCE($2, description),
                 price = COALESCE($3, price),
-                image = COALESCE($4, image)
-            WHERE id = $5
-                RETURNING *
+                stock = COALESCE($4, stock),
+                images = COALESCE($5, images)
+            WHERE id = $6
+            RETURNING *
         `,
         [
             name?.trim() ?? null,
             description ?? null,
             parsedPrice,
-            image ?? null,
+            stock ?? null,
+            images ?? null,
             id
         ]
     );

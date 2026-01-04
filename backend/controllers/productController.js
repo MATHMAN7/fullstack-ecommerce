@@ -37,13 +37,12 @@ export const getProductById = async (req, res) => {
 // ----------------------
 export const createProduct = async (req, res) => {
     try {
-        const image = req.file
-            ? `/uploads/products/${req.file.filename}`
-            : null;
+        // Map uploaded files to array of paths
+        const images = req.files ? req.files.map(file => `/uploads/products/${file.filename}`) : [];
 
         const newProduct = await createProductService({
             ...req.body,
-            image,
+            images,
         });
 
         res.status(201).json(newProduct);
@@ -58,27 +57,22 @@ export const createProduct = async (req, res) => {
 // ----------------------
 export const updateProduct = async (req, res) => {
     try {
-        const image = req.file
-            ? `/uploads/products/${req.file.filename}`
-            : undefined; // undefined = do not overwrite
+        // Map uploaded files to array of paths
+        const images = req.files && req.files.length > 0
+            ? req.files.map(file => `/uploads/products/${file.filename}`)
+            : undefined; // undefined = do not overwrite existing
 
-        const updatedProduct = await updateProductService(
-            req.params.id,
-            {
-                ...req.body,
-                ...(image && { image }),
-            }
-        );
+        const updatedProduct = await updateProductService(req.params.id, {
+            ...req.body,
+            ...(images && { images }),
+        });
 
         res.json(updatedProduct);
     } catch (err) {
         console.error("Error updating product:", err);
-        res.status(
-            err.message === "Product not found" ? 404 : 500
-        ).json({ message: err.message });
+        res.status(err.message === "Product not found" ? 404 : 500).json({ message: err.message });
     }
 };
-
 
 // ----------------------
 // DELETE PRODUCT

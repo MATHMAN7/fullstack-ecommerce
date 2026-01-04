@@ -8,6 +8,7 @@ import {
     updateProduct,
     deleteProduct
 } from '../controllers/productController.js';
+import { uploadProductImage } from '../utils/uploadMiddleware.js';
 
 const router = express.Router();
 
@@ -16,9 +17,23 @@ router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 
 // Admin routes
-router.post('/', authenticateToken, adminMiddleware, createProduct);
-router.put('/:id', authenticateToken, adminMiddleware, updateProduct);
+// uploadProductImage.array("images", 5) -> allow up to 5 images
+router.post(
+    '/',
+    authenticateToken,
+    adminMiddleware,
+    uploadProductImage.array('images', 5),
+    createProduct
+);
+
+router.put(
+    '/:id',
+    authenticateToken,
+    adminMiddleware,
+    uploadProductImage.array('images', 5),
+    updateProduct
+);
+
 router.delete('/:id', authenticateToken, adminMiddleware, deleteProduct);
 
 export default router;
-;
