@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
-import './AdminProducts.css';
+import "./AdminProducts.css";
 
 function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -13,9 +13,10 @@ function AdminProducts() {
         name: "",
         description: "",
         price: "",
-        image: "",
+        stock: "",
     });
 
+    const [images, setImages] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const token = localStorage.getItem("authToken");
 
@@ -23,18 +24,14 @@ function AdminProducts() {
     // FETCH PRODUCTS
     // ----------------------
     const fetchProducts = async () => {
-        if (!token) return;
         try {
             setLoading(true);
-            setError("");
             const res = await fetch("http://localhost:5000/admin/products", {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            if (!res.ok) throw new Error("Failed to load products");
             const data = await res.json();
             setProducts(data);
-        } catch (err) {
-            console.error(err);
+        } catch {
             setError("Failed to load products");
         } finally {
             setLoading(false);
@@ -43,51 +40,76 @@ function AdminProducts() {
 
     useEffect(() => {
         fetchProducts();
-    }, [token]);
+    }, []);
 
     // ----------------------
     // FORM HANDLERS
     // ----------------------
-    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+    const handleChange = (e) =>
+        setForm({ ...form, [e.target.name]: e.target.value });
+
+    const handleFileChange = (e) => {
+        setImages([...e.target.files]);
+    };
 
     const resetForm = () => {
-        setForm({ name: "", description: "", price: "", image: "" });
+        setForm({ name: "", description: "", price: "", stock: "" });
+        setImages([]);
         setEditingId(null);
         setMessage("");
         setError("");
     };
 
     // ----------------------
-    // CREATE PRODUCT
+    // CREATE / UPDATE
     // ----------------------
-    const handleCreate = async () => {
-        if (!token) return;
+    const submitProduct = async (method) => {
         setSubmitting(true);
-        setMessage("");
         setError("");
+        setMessage("");
 
         try {
-            const res = await fetch("http://localhost:5000/admin/products", {
-                method: "POST",
+            const formData = new FormData();
+            formData.append("name", form.name);
+            formData.append("description", form.description);
+            formData.append("price", form.price);
+            formData.append("stock", form.stock);
+
+            images.forEach((file) => {
+                formData.append("images", file);
+            });
+
+            const url = editingId
+                ? `http://localhost:5000/admin/products/${editingId}`
+                : "http://localhost:5000/admin/products";
+
+            const res = await fetch(url, {
+                method,
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(form),
+                body: formData,
             });
+
             if (!res.ok) throw new Error();
-            setMessage("✅ Product created successfully");
+
+            setMessage(
+                editingId
+                    ? "✅ Product updated successfully"
+                    : "✅ Product created successfully"
+            );
+
             resetForm();
             fetchProducts();
         } catch {
-            setError("❌ Failed to create product");
+            setError("❌ Failed to save product");
         } finally {
             setSubmitting(false);
         }
     };
 
     // ----------------------
-    // EDIT PRODUCT
+    // EDIT
     // ----------------------
     const startEdit = (product) => {
         setEditingId(product.id);
@@ -95,65 +117,29 @@ function AdminProducts() {
             name: product.name,
             description: product.description,
             price: product.price,
-            image: product.image,
+            stock: product.stock,
         });
-        setMessage("");
-        setError("");
-    };
-
-    const handleUpdate = async () => {
-        if (!token) return;
-        setSubmitting(true);
-        setMessage("");
-        setError("");
-
-        try {
-            const res = await fetch(`http://localhost:5000/admin/products/${editingId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(form),
-            });
-            if (!res.ok) throw new Error();
-            setMessage("✅ Product updated successfully");
-            resetForm();
-            fetchProducts();
-        } catch {
-            setError("❌ Failed to update product");
-        } finally {
-            setSubmitting(false);
-        }
+        setImages([]);
     };
 
     // ----------------------
-    // DELETE PRODUCT
+    // DELETE
     // ----------------------
     const handleDelete = async (id) => {
-        if (!token) return;
         if (!confirm("Delete this product?")) return;
 
-        setSubmitting(true);
-        setMessage("");
-        setError("");
-
         try {
-            const res = await fetch(`http://localhost:5000/admin/products/${id}`, {
+            await fetch(`http://localhost:5000/admin/products/${id}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` },
             });
-            if (!res.ok) throw new Error();
-            setMessage("🗑️ Product deleted");
             fetchProducts();
         } catch {
             setError("❌ Failed to delete product");
-        } finally {
-            setSubmitting(false);
         }
     };
 
-    if (loading) return <p>Loading products...</p>;
+    if (loading) return <p>Loading...</p>;
 
     return (
         <AdminLayout>
@@ -166,41 +152,22 @@ function AdminProducts() {
                 <h3>{editingId ? "Edit Product" : "Create Product"}</h3>
 
                 <div className="product-form">
-                    <input
-                        name="name"
-                        placeholder="Name"
-                        value={form.name}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="description"
-                        placeholder="Description"
-                        value={form.description}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="price"
-                        type="number"
-                        placeholder="Price"
-                        value={form.price}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="image"
-                        placeholder="Image URL"
-                        value={form.image}
-                        onChange={handleChange}
-                    />
+                    <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
+                    <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+                    <input name="price" type="number" placeholder="Price" value={form.price} onChange={handleChange} />
+                    <input name="stock" type="number" placeholder="Stock" value={form.stock} onChange={handleChange} />
+
+                    <input type="file" multiple onChange={handleFileChange} />
 
                     {editingId ? (
                         <>
-                            <button onClick={handleUpdate} disabled={submitting}>
+                            <button onClick={() => submitProduct("PUT")} disabled={submitting}>
                                 Save Changes
                             </button>
                             <button onClick={resetForm}>Cancel</button>
                         </>
                     ) : (
-                        <button onClick={handleCreate} disabled={submitting}>
+                        <button onClick={() => submitProduct("POST")} disabled={submitting}>
                             Add Product
                         </button>
                     )}
@@ -209,32 +176,22 @@ function AdminProducts() {
                 <h3>All Products</h3>
 
                 <table className="admin-table">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Image</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
                     <tbody>
                     {products.map((p) => (
                         <tr key={p.id}>
-                            <td>{p.id}</td>
                             <td>{p.name}</td>
                             <td>${p.price}</td>
                             <td>
-                                <img src={p.image} width="50" />
+                                {p.images?.length > 0 && (
+                                    <img
+                                        src={`http://localhost:5000${p.images[0]}`}
+                                        width="50"
+                                    />
+                                )}
                             </td>
                             <td>
                                 <button onClick={() => startEdit(p)}>Edit</button>
-                                <button
-                                    onClick={() => handleDelete(p.id)}
-                                    disabled={submitting}
-                                >
-                                    Delete
-                                </button>
+                                <button onClick={() => handleDelete(p.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
