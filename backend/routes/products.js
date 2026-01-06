@@ -12,28 +12,41 @@ import { uploadProductImage } from '../utils/uploadMiddleware.js';
 
 const router = express.Router();
 
-// Public routes
+// ----------------------
+// Public Routes
+// ----------------------
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 
-// Admin routes
-// uploadProductImage.array("images", 5) -> allow up to 5 images
+// ----------------------
+// Admin Routes
+// ----------------------
+
+// POST: Create Product
+
 router.post(
     '/',
+    uploadProductImage.array('images', 5),
     authenticateToken,
     adminMiddleware,
-    uploadProductImage.array('images', 5),
     createProduct
 );
 
+// PUT: Update Product
 router.put(
     '/:id',
+    uploadProductImage.array('images', 5),
     authenticateToken,
     adminMiddleware,
-    uploadProductImage.array('images', 5),
     updateProduct
 );
 
-router.delete('/:id', authenticateToken, adminMiddleware, deleteProduct);
+// DELETE: Delete Product
+router.delete(
+    '/:id',
+    authenticateToken,
+    adminMiddleware,
+    deleteProduct
+);
 
 export default router;

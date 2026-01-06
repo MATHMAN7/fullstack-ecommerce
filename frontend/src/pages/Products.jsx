@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "./Products.css";
 import PageLoader from "./PageLoader";
 
+const API_URL = "http://localhost:5000";
+
 function Products({ onDataReady }) {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,7 +13,7 @@ function Products({ onDataReady }) {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/products");
+                const res = await fetch(`${API_URL}/api/products`);
                 if (!res.ok) throw new Error("Failed to fetch products");
                 const data = await res.json();
                 setProducts(data);
@@ -26,7 +28,7 @@ function Products({ onDataReady }) {
         fetchProducts();
     }, [onDataReady]);
 
-    if (loading) return <PageLoader />;  // <— key change
+    if (loading) return <PageLoader />;
 
     if (error) {
         return (
@@ -47,16 +49,24 @@ function Products({ onDataReady }) {
                 <div className="products-grid">
                     {products.map((product) => (
                         <div key={product.id} className="product-card">
-                            {product.image ? (
-                                <img src={product.image} alt={product.name} />
+                            {/* FIX: Check plural .images array and prepend API_URL */}
+                            {product.images && product.images.length > 0 ? (
+                                <div className="product-image-container">
+                                    <img
+                                        src={`${API_URL}${product.images[0]}`}
+                                        alt={product.name}
+                                        className="product-img"
+                                    />
+                                </div>
                             ) : (
-                                <div className="placeholder-img">No image</div>
+                                <div className="placeholder-img">No image available</div>
                             )}
+
                             <div className="product-card-content">
                                 <h3>{product.name}</h3>
-                                <p>{product.description}</p>
+                                <p className="product-desc">{product.description}</p>
                                 <p className="product-price">${product.price}</p>
-                                <Link to={`/product/${product.id}`} className="add-to-cart-btn">
+                                <Link to={`/product/${product.id}`} className="view-details-btn">
                                     View Details
                                 </Link>
                             </div>
@@ -69,6 +79,3 @@ function Products({ onDataReady }) {
 }
 
 export default Products;
-
-
-

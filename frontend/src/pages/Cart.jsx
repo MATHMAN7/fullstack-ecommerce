@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Cart.css";
 
+const API_URL = "http://localhost:5000";
+
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
@@ -27,12 +29,12 @@ function Cart() {
     const handleCheckout = async () => {
         const token = localStorage.getItem("authToken");
         if (!token) {
-            setMessage("You must be logged in to place an order.");
+            setMessage("❌ You must be logged in to place an order.");
             return;
         }
 
         try {
-            const res = await fetch("http://localhost:5000/api/orders", {
+            const res = await fetch(`${API_URL}/api/orders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -44,42 +46,56 @@ function Cart() {
             const data = await res.json();
 
             if (res.ok) {
-                setMessage("Order placed successfully!");
+                setMessage("✅ Order placed successfully!");
                 localStorage.removeItem("cart");
                 setCartItems([]);
                 setTotalPrice(0);
             } else {
-                setMessage(data.message || "Failed to place order");
+                setMessage(data.message || "❌ Failed to place order");
             }
         } catch (err) {
             console.error(err);
-            setMessage("Error placing order");
+            setMessage("❌ Error placing order");
         }
     };
 
     return (
         <section className="cart-section">
             <div className="cart-container">
-                <h2>Your Cart</h2>
+                <h2>Your Shopping Cart</h2>
 
                 {cartItems.length === 0 ? (
-                    <p className="empty-cart">Your cart is empty</p>
+                    <div className="empty-cart-container">
+                        <p className="empty-cart">Your cart is currently empty.</p>
+                    </div>
                 ) : (
                     <>
                         <div className="cart-list">
                             {cartItems.map((item) => (
                                 <div key={item.id} className="cart-item">
-                                    {item.image && (
-                                        <img
-                                            src={item.image}
-                                            alt={item.name}
-                                            className="cart-item-image"
-                                        />
-                                    )}
+
+                                    <div className="cart-item-image-wrapper">
+                                        {item.displayImage ? (
+                                            <img
+                                                src={item.displayImage}
+                                                alt={item.name}
+                                                className="cart-item-image"
+                                            />
+                                        ) : item.images && item.images.length > 0 ? (
+                                            <img
+                                                src={`${API_URL}${item.images[0]}`}
+                                                alt={item.name}
+                                                className="cart-item-image"
+                                            />
+                                        ) : (
+                                            <div className="cart-no-image">No Image</div>
+                                        )}
+                                    </div>
+
                                     <div className="cart-item-info">
                                         <h3>{item.name}</h3>
                                         <p className="cart-item-price">
-                                            ${item.price} × {item.quantity}
+                                            ${Number(item.price).toFixed(2)} × {item.quantity}
                                         </p>
                                     </div>
                                     <button
@@ -95,13 +111,13 @@ function Cart() {
                         <div className="cart-summary">
                             <h3>Total: ${totalPrice.toFixed(2)}</h3>
                             <button className="checkout-btn" onClick={handleCheckout}>
-                                Place Order
+                                Confirm & Place Order
                             </button>
                         </div>
                     </>
                 )}
 
-                {message && <p className="message">{message}</p>}
+                {message && <p className={`message ${message.includes('✅') ? 'success' : 'error'}`}>{message}</p>}
             </div>
         </section>
     );

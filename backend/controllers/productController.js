@@ -32,13 +32,14 @@ export const getProductById = async (req, res) => {
     }
 };
 
-// ----------------------
-// CREATE PRODUCT
-// ----------------------
 export const createProduct = async (req, res) => {
     try {
-        // Map uploaded files to array of paths
-        const images = req.files ? req.files.map(file => `/uploads/products/${file.filename}`) : [];
+        console.log("BODY:", req.body);
+        console.log("FILES:", req.files);
+
+        const images = req.files
+            ? req.files.map(file => `/uploads/products/${file.filename}`)
+            : [];
 
         const newProduct = await createProductService({
             ...req.body,
@@ -47,20 +48,24 @@ export const createProduct = async (req, res) => {
 
         res.status(201).json(newProduct);
     } catch (err) {
-        console.error("Error creating product:", err);
-        res.status(500).json({ message: err.message || "Server error" });
+        console.error("🔥 CREATE PRODUCT ERROR:", err);
+        res.status(500).json({
+            message: err.message,
+            stack: err.stack, // TEMPORARY
+        });
     }
 };
+
 
 // ----------------------
 // UPDATE PRODUCT
 // ----------------------
 export const updateProduct = async (req, res) => {
     try {
-        // Map uploaded files to array of paths
+
         const images = req.files && req.files.length > 0
             ? req.files.map(file => `/uploads/products/${file.filename}`)
-            : undefined; // undefined = do not overwrite existing
+            : undefined;
 
         const updatedProduct = await updateProductService(req.params.id, {
             ...req.body,

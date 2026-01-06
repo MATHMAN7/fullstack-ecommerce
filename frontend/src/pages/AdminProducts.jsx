@@ -20,9 +20,6 @@ function AdminProducts() {
     const [editingId, setEditingId] = useState(null);
     const token = localStorage.getItem("authToken");
 
-    // ----------------------
-    // FETCH PRODUCTS
-    // ----------------------
     const fetchProducts = async () => {
         try {
             setLoading(true);
@@ -42,9 +39,6 @@ function AdminProducts() {
         fetchProducts();
     }, []);
 
-    // ----------------------
-    // FORM HANDLERS
-    // ----------------------
     const handleChange = (e) =>
         setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -60,9 +54,6 @@ function AdminProducts() {
         setError("");
     };
 
-    // ----------------------
-    // CREATE / UPDATE
-    // ----------------------
     const submitProduct = async (method) => {
         setSubmitting(true);
         setError("");
@@ -108,9 +99,6 @@ function AdminProducts() {
         }
     };
 
-    // ----------------------
-    // EDIT
-    // ----------------------
     const startEdit = (product) => {
         setEditingId(product.id);
         setForm({
@@ -122,9 +110,6 @@ function AdminProducts() {
         setImages([]);
     };
 
-    // ----------------------
-    // DELETE
-    // ----------------------
     const handleDelete = async (id) => {
         if (!confirm("Delete this product?")) return;
 
@@ -157,7 +142,12 @@ function AdminProducts() {
                     <input name="price" type="number" placeholder="Price" value={form.price} onChange={handleChange} />
                     <input name="stock" type="number" placeholder="Stock" value={form.stock} onChange={handleChange} />
 
-                    <input type="file" multiple onChange={handleFileChange} />
+                    <input
+                        type="file"
+                        name="images"
+                        multiple
+                        onChange={handleFileChange}
+                    />
 
                     {editingId ? (
                         <>
@@ -203,4 +193,3 @@ function AdminProducts() {
 }
 
 export default AdminProducts;
-

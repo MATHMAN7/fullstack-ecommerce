@@ -32,7 +32,7 @@ export const getProductById = async (id) => {
 export const createProduct = async (data) => {
     const { name, description, price, stock, images } = data;
 
-    if (!name || !price) {
+    if (!name || price === undefined) {
         throw new Error("Name and price are required");
     }
 
@@ -41,17 +41,22 @@ export const createProduct = async (data) => {
         throw new Error("Invalid price");
     }
 
+    const parsedStock = Number(stock || 0);
+    if (isNaN(parsedStock)) {
+        throw new Error("Invalid stock");
+    }
+
     const result = await pool.query(
         `
-            INSERT INTO products (name, description, price, stock, images)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING *
+        INSERT INTO products (name, description, price, stock, images)
+        VALUES ($1, $2, $3, $4, $5::text[])
+        RETURNING *
         `,
         [
             name.trim(),
             description || "",
             parsedPrice,
-            stock || 0,
+            parsedStock,
             images || []
         ]
     );
@@ -70,23 +75,28 @@ export const updateProduct = async (id, data) => {
         throw new Error("Invalid price");
     }
 
+    const parsedStock = stock !== undefined ? Number(stock) : null;
+    if (stock !== undefined && isNaN(parsedStock)) {
+        throw new Error("Invalid stock");
+    }
+
     const result = await pool.query(
         `
-            UPDATE products
-            SET
-                name = COALESCE($1, name),
-                description = COALESCE($2, description),
-                price = COALESCE($3, price),
-                stock = COALESCE($4, stock),
-                images = COALESCE($5, images)
-            WHERE id = $6
-            RETURNING *
+        UPDATE products
+        SET
+            name = COALESCE($1, name),
+            description = COALESCE($2, description),
+            price = COALESCE($3, price),
+            stock = COALESCE($4, stock),
+            images = COALESCE($5::text[], images)
+        WHERE id = $6
+        RETURNING *
         `,
         [
             name?.trim() ?? null,
             description ?? null,
             parsedPrice,
-            stock ?? null,
+            parsedStock,
             images ?? null,
             id
         ]
